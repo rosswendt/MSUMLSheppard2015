@@ -12,7 +12,8 @@ public class Driver {
     
     //static Point[] dataSet;                             //I don't think we need a Point class/object at all
     static double[] dataSetX;
-    static double[] trainingSet;                         //needs to be arbitrarily chosen
+    static double[] trainingSetX;                         //needs to be arbitrarily chosen
+    static double[] trainingSetY;                         //these could be 2d arrays if we'd rather do that
     static double[] rosenbrock;
     static double[] dataSetY;
     //NeuralNet driverNet = new NeuralNet(0,0,0,0);
