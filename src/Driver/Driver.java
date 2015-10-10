@@ -11,17 +11,24 @@ import java.util.Random;
 public class Driver { 
     
     //static Point[] dataSet;                             //I don't think we need a Point class/object at all
-    static double[] dataSet;
+    static double[] dataSetX;
     static double[] trainingSet;                         //needs to be arbitrarily chosen
     static double[] rosenbrock;
+    static double[] dataSetY;
     //NeuralNet driverNet = new NeuralNet(0,0,0,0);
     static double outputYVal;
+    static FunctionToApproximate func;                         //Used to call the activation function and incase we don't want the rosenbrock in the driver function
     
     public static void main(String Args[]) {
         int n = 5;                                      //n = number of points in the data set
-        dataSet = generateData(n);                      //generates n points in the data set
-        run(dataSet);
-  
+        dataSetX = generateData(n);                      //generates n points in the data set
+        //trainingSet = generateData(n);
+        run(dataSetX);
+        dataSetY = func.FunctionToApproximate(dataSetX);
+        
+        //printArray(dataSetX);
+        //printArray(dataSetY);
+
     }
     
     
@@ -44,7 +51,7 @@ public class Driver {
 //           int randomNum = ran.nextInt(5)+1;
 //           System.out.print(x[i] + ", ");      //Generating random values for the x variable from 1-5
 //        }
-           computeRosenBrockOutVal(dataSet);
+           computeRosenBrockOutVal(dataSetX);
 //           System.out.println(rosenbrock[0]);
     }
     
@@ -67,4 +74,11 @@ public class Driver {
         
     }
         return temp;
-}}
+}
+
+    public static void printArray(double[] x){
+        for(int i=0; i<x.length; i++){
+            System.out.println(x[i]);
+        }
+    }
+}
