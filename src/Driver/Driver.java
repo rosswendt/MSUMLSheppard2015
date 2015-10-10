@@ -45,16 +45,16 @@ public class Driver {
 //           System.out.print(x[i] + ", ");      //Generating random values for the x variable from 1-5
 //        }
            computeRosenBrockOutVal(dataSet);
-
+//           System.out.println(rosenbrock[0]);
     }
     
     //perhaps various methods for printing different things 
                     //for now I've shoved those in run   
 
-    public static double computeRosenBrockOutVal(double[] x) {
+    public static double computeRosenBrockOutVal(double[] x) {          //did this really need to be in Function Approximate?
         // f(x) = sigma 100*(xi+1 - xi^2)^2 + (1-xi)^2      <--wiki
         //f(x,y) = (a-z)^2 + b(y-x^2)^2 <--wiki
-
+        rosenbrock = new double[1];
         double temp = 0.0;
         for(int i=0; i<x.length -1; i++){
         double a = x[i];
@@ -62,7 +62,8 @@ public class Driver {
         double c = a*a;
      
         temp+= ((1-a)*(1-a)) + 100*((b-c)*(b-c)); 
-        System.out.println(temp);
+        //System.out.println(temp);
+        rosenbrock[0] = temp;
         
     }
         return temp;
