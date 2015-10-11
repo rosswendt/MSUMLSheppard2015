@@ -4,32 +4,33 @@ package DataPack;
  *
  * @author Ross Wendt
  */
-public class FunctionToApproximate {
+public class Functions {
     int outputYVal;
     
-    public static double[] FunctionToApproximate(double[] x) {      //hyperbolic tangent
-    double [] y;
-    y = new double[x.length];
-       
-    for(int i=0; i<x.length; i++){
-    double a = Math.exp( x[i] );
-    double b = Math.exp( 0 - (x[i]));
-    y[i]=((a-b)/(a+b));
-}
+    public static double tanh(double x) {      //hyperbolic tangent
+    //double [] y;
+    //y = new double[x.length];
+    double y;   
+    //for(int i=0; i<x.length; i++){
+    double a = Math.exp( x );
+    double b = Math.exp( 0 - (x));
+    y=((a-b)/(a+b));
+
     
     return y;
     }
     
-    public static double[] tanhDerivative(double[] x){              //takes an array and applies the derivative of hyperbolic tangent to it. that deriv is 1-tanh^2
-        double[] y = new double[x.length];
+    public static double tanhDerivative(double x){              //takes an array and applies the derivative of hyperbolic tangent to it. that deriv is 1-tanh^2
+        //double[] y = new double[x.length];
         double tan = 0;
-        for(int i=0; i<x.length; i++){
-        double a = Math.exp( x[i] );
-        double b = Math.exp( 0 - (x[i]));
+        double y;
+        //for(int i=0; i<x.length; i++){
+        double a = Math.exp( x );
+        double b = Math.exp( 0 - (x));
         tan =((a-b)/(a+b));
-        y[i] = 1-(tan * tan);
+        y = 1-(tan * tan);
         
-    }
+    
         return y;
     }
     
@@ -43,22 +44,23 @@ public class FunctionToApproximate {
         return outputYVal;
     }
     
-    public static double[] gaussian(int r, int c, double[] x){  //r is radius and c is center. Those need to be determined at methoud call
-        double[] y = new double[x.length];              //set of points to put through
-        for(int i=0; i<x.length; i++){
-        double d = (x[i] - c) * (x[i] - c);             //get the joke?
-        y[i] = Math.exp(0-((d)/(r * r)));               //impluments gausian radial function
-        }
+    public static double gaussian(int r, int c, double x){  //r is radius and c is center. Those need to be determined at methoud call
+        //double[] y = new double[x.length];              //set of points to put through
+        //for(int i=0; i<x.length; i++){
+        double y;
+        double d = (x - c) * (x - c);             //get the joke?
+        y = Math.exp(0-((d)/(r * r)));               //impluments gausian radial function
+        
         return y;
     }
     
-    public static double[] gaussianDerivative(int r, int c, double[] x){  //r is radius and c is center. Those need to be determined at methoud call
-        double[] y = new double[x.length];              //set of points to put through
-        for(int i=0; i<x.length; i++){
-        double d = (x[i] - c) * (x[i] - c);             //get the joke?
+    public static double gaussianDerivative(int r, int c, double x){  //r is radius and c is center. Those need to be determined at methoud call
+        //double[] y = new double[x.length];              //set of points to put through
+        //for(int i=0; i<x.length; i++){
+        double d = (x - c) * (x - c);             //get the joke?
         double temp= Math.exp(0-((d)/(r * r)));
-        y[i] = ((2*c*temp)/(r*r)) - ((2*x[i]*temp)/(r*r));               //impluments derivative of gausian radial function
-        }
+        double y = ((2*c*temp)/(r*r)) - ((2*x*temp)/(r*r));               //impluments derivative of gausian radial function
+        
         return y;
     }
 }
