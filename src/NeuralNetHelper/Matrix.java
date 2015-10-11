@@ -2,28 +2,35 @@ package NeuralNetHelper;
 
 /**
  *
- * @author Ross Wendt
+ * @author Angus Tomlinson
  */
 public class Matrix {
-    int rowSize, columnSize;
-    public Matrix( int startRowSize, int startColumnSize) {
-        rowSize = startRowSize;
-        columnSize = startColumnSize;
-    }
+    private final int rows;
+    private final int columns;
+    private final double[][] matrixValues;
     
-    private Matrix InnerProduct(Matrix ... matrices) {
-        for (Matrix m : matrices ) {
-            //
+    /**
+     *
+     * @param initialMatrixValues
+     */
+    public Matrix(double[][] initialMatrixValues){
+        rows = initialMatrixValues.length;
+        columns = initialMatrixValues[0].length;
+        matrixValues = new double[rows][columns];
+        for(int i = 0; i < matrixValues.length; i++){
+            System.arraycopy(initialMatrixValues[i], 0, matrixValues[i], 0, matrixValues[0].length);
         }
-        return null;
     }
     
-    private Matrix OuterProduct(Matrix ... matrices) {
-        for (Matrix m : matrices ) {
-            //
-        }
-        return null;
+    public int getRows(){
+        return rows;
     }
     
+    public int getColumns(){
+        return columns;
+    }
     
+    public double[][] getMatrixValues(){
+        return matrixValues;
+    }
 }
