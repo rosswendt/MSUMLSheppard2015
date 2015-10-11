@@ -43,4 +43,13 @@ public class FunctionToApproximate {
         return outputYVal;
     }
     
+    public static double[] gaussian(int r, int c, double[] x){  //r is radius and c is center. Those need to be determined at methoud call
+        double[] y = new double[x.length];              //set of points to put through
+        for(int i=0; i<x.length; i++){
+        double d = (x[i] - c) * (x[i] - c);             //get the joke?
+        y[i] = Math.exp(0-((d)/(r * r)));               //impluments gausian radial function
+        }
+        return y;
+    }
+    
 }
