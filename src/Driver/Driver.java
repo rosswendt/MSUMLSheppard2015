@@ -5,7 +5,7 @@ import java.util.Random;
 
 /**
  *
- * @author Ross Wendt, Lukas Keller
+ * @author Lukas Keller
  */
 public class Driver { 
     
