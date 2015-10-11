@@ -2,7 +2,7 @@ package DataPack;
 
 /**
  *
- * @author Ross Wendt
+ * @author Lukas
  */
 public class Functions {
     int outputYVal;
