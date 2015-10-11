@@ -52,4 +52,13 @@ public class FunctionToApproximate {
         return y;
     }
     
+    public static double[] gaussianDerivative(int r, int c, double[] x){  //r is radius and c is center. Those need to be determined at methoud call
+        double[] y = new double[x.length];              //set of points to put through
+        for(int i=0; i<x.length; i++){
+        double d = (x[i] - c) * (x[i] - c);             //get the joke?
+        double temp= Math.exp(0-((d)/(r * r)));
+        y[i] = ((2*c*temp)/(r*r)) - ((2*x[i]*temp)/(r*r));               //impluments derivative of gausian radial function
+        }
+        return y;
+    }
 }
