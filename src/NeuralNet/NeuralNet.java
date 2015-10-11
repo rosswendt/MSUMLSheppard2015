@@ -1,5 +1,7 @@
 package NeuralNet;
 
+import NeuralNetHelper.*;
+
 /**
  *
  * @author Angus Tomlinson
