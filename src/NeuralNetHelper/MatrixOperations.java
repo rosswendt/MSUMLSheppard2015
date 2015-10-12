@@ -62,7 +62,7 @@ public class MatrixOperations {
     }
     
     public static Matrix transpose(Matrix a){
-        double[][] zeroMatrix = new double[a.getRows()][a.getColumns()];
+        double[][] zeroMatrix = new double[a.getColumns()][a.getRows()];
         Matrix resultMatrix = new Matrix(zeroMatrix);
         for(int i = 0; i < a.getRows(); i++){
             for(int j = 0; j < a.getColumns(); j++){
@@ -124,7 +124,7 @@ public class MatrixOperations {
     }
     
     public static Matrix hadamardProduct(Matrix a, Matrix b){
-        double[][] zeroMatrix = new double[a.getRows()][a.getColumns()];
+        double[][] zeroMatrix = new double[a.getRows()][b.getColumns()];
         Matrix resultMatrix = new Matrix(zeroMatrix);
         for(int i = 0; i < a.getRows(); i++){
             for(int j = 0; j < a.getColumns(); j++){
