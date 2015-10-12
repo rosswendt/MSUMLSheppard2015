@@ -64,9 +64,8 @@ public class NeuralNet {
     }
 
     public Matrix updateWeights(Matrix weightMatrix, Matrix deltaMatrix, Matrix zMatrix) {
-        Matrix transposeZMatrix = MatrixOperations.transpose(zMatrix);
-        Matrix deltaWeightMatrix = MatrixOperations.scalarMultiply(-1, MatrixOperations.scalarMultiply(eta,
-                MatrixOperations.multiplyMatrixes(transposeZMatrix, deltaMatrix)));
+        Matrix deltaWeightMatrix = MatrixOperations.scalarMultiply(1, MatrixOperations.scalarMultiply(eta,
+                MatrixOperations.multiplyMatrixes(deltaMatrix, zMatrix)));
         weightMatrix = MatrixOperations.addMatrixes(weightMatrix, deltaWeightMatrix);
         return weightMatrix;
     }
@@ -96,19 +95,21 @@ public class NeuralNet {
     }
 
     public void backPropagation() {
-        deltaOutputMatrix = MatrixOperations.hadamardProduct(derivativeSMatrices[derivativeSMatrices.length - 1],
-                MatrixOperations.subtractMatrixes(outputMatrix, targetOutputMatrix));
-        deltaSMatrices[0] = MatrixOperations.multiplyMatrixes(deltaOutputMatrix, weightMatrices[weightMatrices.length - 1]);
-        deltaZMatrices[0] = MatrixOperations.hadamardProduct(derivativeSMatrices[derivativeSMatrices.length - 1],
-                deltaSMatrices[0]);
+        deltaOutputMatrix = MatrixOperations.hadamardProduct(MatrixOperations.
+                transpose(derivativeSMatrices[derivativeSMatrices.length - 1]),
+                MatrixOperations.transpose(MatrixOperations.subtractMatrixes(outputMatrix, targetOutputMatrix)));
+        deltaSMatrices[0] = MatrixOperations.multiplyMatrixes(weightMatrices[weightMatrices.length - 1], deltaOutputMatrix);
+        deltaZMatrices[0] = MatrixOperations.hadamardProduct(MatrixOperations.
+                transpose(derivativeSMatrices[derivativeSMatrices.length - 2]), deltaSMatrices[0]);
         weightMatrices[weightMatrices.length - 1]
                 = updateWeights(weightMatrices[weightMatrices.length - 1], deltaZMatrices[0], outputMatrix);
         biasMatrices[biasMatrices.length - 1]
                 = updateBiases(biasMatrices[biasMatrices.length - 1], deltaZMatrices[0]);
         for (int i = 1; i < deltaSMatrices.length - 1; i++) {
-            deltaSMatrices[i] = MatrixOperations.multiplyMatrixes(deltaZMatrices[i - 1],
-                    weightMatrices[weightMatrices.length - (i + 1)]);
-            deltaZMatrices[i] = MatrixOperations.hadamardProduct(derivativeSMatrices[derivativeSMatrices.length - (i + 1)],
+            deltaSMatrices[i] = MatrixOperations.multiplyMatrixes(weightMatrices[weightMatrices.length - (i + 1)], 
+                    deltaZMatrices[i - 1]);
+            deltaZMatrices[i] = MatrixOperations.hadamardProduct(MatrixOperations.
+                    transpose(derivativeSMatrices[derivativeSMatrices.length - (i + 1)]),
                     deltaSMatrices[i]);
             weightMatrices[weightMatrices.length - (i + 1)]
                     = updateWeights(weightMatrices[weightMatrices.length - (i + 1)], deltaZMatrices[i],
@@ -117,7 +118,7 @@ public class NeuralNet {
                     = updateBiases(biasMatrices[biasMatrices.length - (i + 1)], deltaZMatrices[i]);
         }
         deltaSMatrices[deltaSMatrices.length - 1]
-                = MatrixOperations.multiplyMatrixes(deltaZMatrices[deltaZMatrices.length - 2], weightMatrices[0]);
+                = MatrixOperations.multiplyMatrixes(weightMatrices[0], deltaZMatrices[deltaZMatrices.length - 2]);//, weightMatrices[0]);
         deltaZMatrices[zMatrices.length - 1] = deltaSMatrices[deltaSMatrices.length - 1];
         weightMatrices[0]
                 = updateWeights(weightMatrices[0], deltaZMatrices[deltaZMatrices.length - 1],
@@ -132,6 +133,10 @@ public class NeuralNet {
 
     public Matrix getOutputMatrix() {
         return outputMatrix;
+    }
+    
+    public Matrix getTargetOutputMatrix(){
+        return targetOutputMatrix;
     }
 
     public Matrix[] getWeightMatrixes() {
