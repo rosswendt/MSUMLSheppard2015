@@ -8,6 +8,7 @@ import NeuralNetHelper.*;
  */
 public final class NeuralNet {
 
+    //tunable parameters:
     private final double eta = 0.3;
     private final double upperBoundWeight = 1;
     private final double upperBoundBiasWeight = 100;
