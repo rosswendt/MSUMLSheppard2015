@@ -2,6 +2,8 @@ package Driver;
 import DataPack.*;
 import NeuralNet.*;
 
+import java.util.Random;
+
 /**
  *
  * @author Angus Tomlinson
@@ -12,9 +14,22 @@ public class Driver {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        double[][] matrixA = {{1, 2}};
-        double[][] matrixB = {{1}};
-        int[] hiddenLayers = {3};
+        double lowerBound = -5;
+        double upperBound = 10;
+        int dataSetSize = 1000; // make sure this number is divisible by k
+        int k = 10; // number of folds
+        int n = 2;
+        
+        double[][] xDataSet = initializeXDataSet(dataSetSize, n, lowerBound, upperBound);
+        //double[][] yDataSet = initializeYDataSet(xDataSet);
+        
+        
+        
+        double[][] matrixA = {{4, 2}};//xDataSet[0];
+        System.out.println();
+        double[][] matrixB = {{20}};//yDataSet[0];
+        System.out.println();
+        int[] hiddenLayers = {1};
 
         NeuralNet neuralNet = new NeuralNet(matrixA, matrixB, hiddenLayers);
 
@@ -38,7 +53,7 @@ public class Driver {
             System.out.println();
         }
         System.out.println();
-        for (int k = 0; k < 1000; k++) {
+        for (int l = 0; l < 1000; l++) {
             neuralNet.backPropagation();
             neuralNet.forwardPropagation();
             c = neuralNet.getOutputMatrix();
@@ -97,5 +112,27 @@ public class Driver {
             }
             System.out.println();
         }
+    }
+    
+    public static double[][] initializeXDataSet(int samples, int n, double lowerBound, double upperBound){
+        Random rdm = new Random();
+        double stepCounter = (upperBound - lowerBound) / (samples * n);
+        double xValue = lowerBound;
+        double [][] xDataSet = new double[samples][n];
+        for(int i = 0; i < samples; i++){
+            for(int j = 0; j < n; j++){
+                xDataSet[i][j] = (rdm.nextDouble() * (upperBound - lowerBound)) + lowerBound;
+            }
+        }
+        
+        return xDataSet;
+    }
+    
+    public static double[][] initializeYDataSet(double[][] xDataSet){
+        double [][] yDataSet = new double[xDataSet.length][1];
+        for(int i = 0; i < yDataSet.length; i++){
+            yDataSet[i][0] = Functions.computeRosenBrockOutVal(xDataSet[i]);
+        }
+        return yDataSet;
     }
 }
