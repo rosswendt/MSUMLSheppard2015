@@ -9,14 +9,14 @@ import NeuralNetHelper.*;
 public final class NeuralNet {
 
     private final double eta = 0.3;
-    private final double upperBoundWeight = 0.2;
-    private final double upperBoundBiasWeight = 0.2;
-    private final double momentumParameter = 0;
+    private final double upperBoundWeight = 1;
+    private final double upperBoundBiasWeight = 100;
+    private final double momentumParameter = 0.1;
 
     private final boolean isHiddenLayerCountZero;
-    private final Matrix input;
+    private Matrix input;
     private Matrix output;
-    private final Matrix targetOutput;
+    private Matrix targetOutput;
     private Matrix[] weightMatrices;
     private Matrix[] biasMatrices;
     private final Matrix[] sMatrices;
@@ -26,9 +26,9 @@ public final class NeuralNet {
     private final Matrix[] lastWeightUpdates;
     private final Matrix[] lastBiasUpdates;
 
-    public NeuralNet(double[][] input, double[][] targetOutput, int[] hiddenLayers) {
+    public NeuralNet(double[] input, double[] targetOutput, int[] hiddenLayers) {
         this.input = new Matrix(input);
-        output = new Matrix(new double[targetOutput.length][targetOutput[0].length]);
+        output = new Matrix(new double[targetOutput.length]);
         this.targetOutput = new Matrix(targetOutput);
 
         isHiddenLayerCountZero = (hiddenLayers.length == 0);
@@ -143,6 +143,10 @@ public final class NeuralNet {
     public Matrix getInputMatrix() {
         return input;
     }
+    
+    public void setInputMatrix(double[] inputMatrix){
+        input = new Matrix(inputMatrix);
+    }
 
     public Matrix getOutputMatrix() {
         return output;
@@ -150,6 +154,10 @@ public final class NeuralNet {
 
     public Matrix getTargetOutputMatrix() {
         return targetOutput;
+    }
+    
+    public void setTargetOutputMatrix(double[] targetOutputMatrix){
+        targetOutput = new Matrix(targetOutputMatrix);
     }
 
     public Matrix getError() {
