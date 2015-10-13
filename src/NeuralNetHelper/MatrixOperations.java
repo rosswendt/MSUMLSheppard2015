@@ -11,6 +11,24 @@ public class MatrixOperations {
     private static final int r = 1;
     private static final int c = 2;
     
+    public static Matrix initializeZeroMatrix(Matrix a){
+        for(int i = 0; i < a.getRows(); i++){
+            for(int j = 0; j < a.getColumns(); j++){
+                a.getMatrixValues()[i][j] = 0;
+            }
+        }
+        return a;
+    }
+    
+    public static Matrix initializeOneMatrix(Matrix a){
+        for(int i = 0; i < a.getRows(); i++){
+            for(int j = 0; j < a.getColumns(); j++){
+                a.getMatrixValues()[i][j] = 1;
+            }
+        }
+        return a;
+    }
+    
     public static Matrix initializeBiasMatrix(double theta, Matrix a){
         for(int i = 0; i < a.getRows(); i++){
             for(int j = 0; j < a.getColumns(); j++){
@@ -20,17 +38,17 @@ public class MatrixOperations {
         return a;
     }
     
-    public static Matrix randomlyInitializeMatrix(Matrix a){
+    public static Matrix randomlyInitializeMatrix(Matrix a, double upperBound){
         Random randomGenerator = new Random();
         for(int i = 0; i < a.getRows(); i++){
             for(int j = 0; j < a.getColumns(); j++){
-                a.getMatrixValues()[i][j] = randomGenerator.nextDouble();
+                a.getMatrixValues()[i][j] = (randomGenerator.nextDouble() * (2 * upperBound)) - upperBound;
             }
         }
         return a;
     }
     
-    public static Matrix addMatrixes(Matrix a, Matrix b){
+    public static Matrix addMatrices(Matrix a, Matrix b){
         double[][] zeroMatrix = new double[a.getRows()][b.getColumns()];
         Matrix resultMatrix = new Matrix(zeroMatrix);
         for(int i = 0; i < resultMatrix.getRows(); i++){
@@ -41,7 +59,7 @@ public class MatrixOperations {
         return resultMatrix;
     }
     
-    public static Matrix subtractMatrixes(Matrix a, Matrix b){
+    public static Matrix subtractMatrices(Matrix a, Matrix b){
         double[][] zeroMatrix = new double[a.getRows()][b.getColumns()];
         Matrix resultMatrix = new Matrix(zeroMatrix);
         for(int i = 0; i < resultMatrix.getRows(); i++){
@@ -85,6 +103,24 @@ public class MatrixOperations {
         for(int i = 0; i < a.getRows(); i++){
             for(int j = 0; j < a.getColumns(); j++){
                 a.getMatrixValues()[i][j] = Functions.tanhDerivative(a.getMatrixValues()[i][j]);
+            }
+        }
+        return a;
+    }
+    
+    public static Matrix sigmoid(Matrix a){
+        for(int i = 0; i < a.getRows(); i++){
+            for(int j = 0; j < a.getColumns(); j++){
+                a.getMatrixValues()[i][j] = Functions.sigmoid(a.getMatrixValues()[i][j]);
+            }
+        }
+        return a;
+    }
+    
+    public static Matrix derivativeSigmoid(Matrix a){
+        for(int i = 0; i < a.getRows(); i++){
+            for(int j = 0; j < a.getColumns(); j++){
+                a.getMatrixValues()[i][j] = Functions.sigmoidDerivative(a.getMatrixValues()[i][j]);
             }
         }
         return a;
