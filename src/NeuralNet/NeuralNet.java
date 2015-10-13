@@ -6,186 +6,154 @@ import NeuralNetHelper.*;
  *
  * @author Angus Tomlinson
  */
-public class NeuralNet {
+public final class NeuralNet {
 
-    private double eta = 0.3;
-    private double theta = 1;
-    
-    private double momentumParameter = 0.7;
+    private final double eta = 0.3;
+    private final double upperBoundWeight = 0.2;
+    private final double upperBoundBiasWeight = 0.2;
+    private final double momentumParameter = 0;
 
-    private Matrix inputMatrix;
-    private Matrix outputMatrix;
-    private Matrix targetOutputMatrix;
-    private Matrix deltaOutputMatrix;
+    private final boolean isHiddenLayerCountZero;
+    private final Matrix input;
+    private Matrix output;
+    private final Matrix targetOutput;
     private Matrix[] weightMatrices;
     private Matrix[] biasMatrices;
-    private Matrix[] sMatrices;
-    private Matrix[] zMatrices;
-    private Matrix[] derivativeSMatrices;
-    private Matrix[] deltaSMatrices;
-    private Matrix[] deltaZMatrices;
-    private Matrix[] lastWeightUpdates;
-    private Matrix[] lastBiasUpdates;
+    private final Matrix[] sMatrices;
+    private final Matrix[] zMatrices;
+    private final Matrix[] FMatrices;
+    private final Matrix[] deltaZMatrices;
+    private final Matrix[] lastWeightUpdates;
+    private final Matrix[] lastBiasUpdates;
 
     public NeuralNet(double[][] input, double[][] targetOutput, int[] hiddenLayers) {
-        inputMatrix = new Matrix(input);
-        outputMatrix = new Matrix(new double[targetOutput.length][targetOutput[0].length]);
-        targetOutputMatrix = new Matrix(targetOutput);
+        this.input = new Matrix(input);
+        output = new Matrix(new double[targetOutput.length][targetOutput[0].length]);
+        this.targetOutput = new Matrix(targetOutput);
+
+        isHiddenLayerCountZero = (hiddenLayers.length == 0);
+
+        initializeWeights(hiddenLayers);
+
+        lastWeightUpdates = new Matrix[weightMatrices.length];
+        for (int i = 0; i < weightMatrices.length; i++) {
+            lastWeightUpdates[i] = new Matrix(new double[weightMatrices[i].getRows()][weightMatrices[i].getColumns()]);
+        }
+
+        lastBiasUpdates = new Matrix[weightMatrices.length];
+        for (int i = 0; i < biasMatrices.length; i++) {
+            lastBiasUpdates[i] = new Matrix(new double[biasMatrices[i].getRows()][biasMatrices[i].getColumns()]);
+        }
+
+        sMatrices = new Matrix[hiddenLayers.length];
+        zMatrices = new Matrix[hiddenLayers.length];
+        FMatrices = new Matrix[hiddenLayers.length];
+
+        deltaZMatrices = new Matrix[hiddenLayers.length + 1];
+    }
+
+    public void initializeWeights(int[] hiddenLayers) {
         weightMatrices = new Matrix[hiddenLayers.length + 1];
-        if (weightMatrices.length == 1) {
-            weightMatrices[0] = new Matrix(new double[inputMatrix.getColumns()][outputMatrix.getColumns()]);
+        if (isHiddenLayerCountZero) {
+            weightMatrices[0] = new Matrix(new double[this.input.getColumns()][output.getColumns()]);
         } else {
-            weightMatrices[0] = new Matrix(new double[inputMatrix.getColumns()][hiddenLayers[0]]);
+            weightMatrices[0] = new Matrix(new double[this.input.getColumns()][hiddenLayers[0]]);
             for (int i = 1; i < hiddenLayers.length; i++) {
                 weightMatrices[i] = new Matrix(new double[hiddenLayers[i - 1]][hiddenLayers[i]]);
             }
-            weightMatrices[weightMatrices.length - 1] = new Matrix(new double[hiddenLayers[hiddenLayers.length - 1]][outputMatrix.getColumns()]);
+            weightMatrices[weightMatrices.length - 1] = new Matrix(new double[hiddenLayers[hiddenLayers.length - 1]][output.getColumns()]);
         }
-        setWeights();
-        biasMatrices = new Matrix[hiddenLayers.length + 1];
-        for (int i = 0; i < biasMatrices.length - 1; i++) {
-            biasMatrices[i] = new Matrix(new double[1][hiddenLayers[i]]);
-        }
-        biasMatrices[biasMatrices.length - 1] = new Matrix(new double[1][outputMatrix.getColumns()]);
-        setBiases();
-        sMatrices = new Matrix[hiddenLayers.length + 1];
-        zMatrices = new Matrix[hiddenLayers.length + 1];
-        derivativeSMatrices = new Matrix[hiddenLayers.length + 1];
-        deltaSMatrices = new Matrix[hiddenLayers.length + 1];
-        deltaZMatrices = new Matrix[hiddenLayers.length + 1];
-        
-        lastWeightUpdates = new Matrix[hiddenLayers.length + 1];
-        if (lastWeightUpdates.length == 1) {
-            lastWeightUpdates[0] = new Matrix(new double[inputMatrix.getColumns()][outputMatrix.getColumns()]);
-            lastWeightUpdates[0] = MatrixOperations.initializeZeroMatrix(lastWeightUpdates[0]);
-        } else {
-            lastWeightUpdates[0] = new Matrix(new double[inputMatrix.getColumns()][hiddenLayers[0]]);
-            lastWeightUpdates[0] = MatrixOperations.initializeZeroMatrix(lastWeightUpdates[0]);
-            for (int i = 1; i < hiddenLayers.length; i++) {
-                lastWeightUpdates[i] = new Matrix(new double[hiddenLayers[i - 1]][hiddenLayers[i]]);
-                lastWeightUpdates[i] = MatrixOperations.initializeZeroMatrix(lastWeightUpdates[i]);
-            }
-            lastWeightUpdates[lastWeightUpdates.length - 1] = new Matrix(new double[hiddenLayers[hiddenLayers.length - 1]]
-                    [outputMatrix.getColumns()]);
-            lastWeightUpdates[lastWeightUpdates.length - 1] = MatrixOperations.
-                    initializeZeroMatrix(lastWeightUpdates[lastWeightUpdates.length - 1]);
-        }
-        lastBiasUpdates = new Matrix[hiddenLayers.length + 1];
-        for (int i = 0; i < lastBiasUpdates.length - 1; i++) {
-            lastBiasUpdates[i] = new Matrix(new double[1][hiddenLayers[i]]);
-            lastBiasUpdates[i] = MatrixOperations.initializeZeroMatrix(lastBiasUpdates[i]);
-        }
-        lastBiasUpdates[lastBiasUpdates.length - 1] = new Matrix(new double[1][outputMatrix.getColumns()]);
-        lastBiasUpdates[lastBiasUpdates.length - 1] = MatrixOperations.
-                initializeZeroMatrix(lastBiasUpdates[lastBiasUpdates.length - 1]);
-    }
 
-    public void setWeights() {
         for (int i = 0; i < weightMatrices.length; i++) {
-            weightMatrices[i] = MatrixOperations.randomlyInitializeMatrix(weightMatrices[i]);
+            weightMatrices[i] = MatrixOperations.randomlyInitializeMatrix(weightMatrices[i], upperBoundWeight);
         }
-    }
 
-    public void setBiases() {
+        biasMatrices = new Matrix[hiddenLayers.length + 1];
+        if (isHiddenLayerCountZero) {
+            biasMatrices[0] = new Matrix(new double[1][output.getColumns()]);
+        } else {
+            for (int i = 0; i < biasMatrices.length - 1; i++) {
+                biasMatrices[i] = new Matrix(new double[1][hiddenLayers[i]]);
+            }
+            biasMatrices[biasMatrices.length - 1] = new Matrix(new double[1][output.getColumns()]);
+        }
+
         for (int i = 0; i < biasMatrices.length; i++) {
-            biasMatrices[i] = MatrixOperations.initializeBiasMatrix(theta, biasMatrices[i]);
+            biasMatrices[i] = MatrixOperations.randomlyInitializeMatrix(biasMatrices[i], upperBoundBiasWeight);
         }
-    }
-
-    public Matrix updateWeights(Matrix weightMatrix, Matrix deltaMatrix, Matrix zMatrix, int i) {
-        Matrix deltaWeightMatrix = MatrixOperations.scalarMultiply(1, MatrixOperations.scalarMultiply(eta,
-                MatrixOperations.multiplyMatrixes(deltaMatrix, zMatrix)));
-        deltaWeightMatrix = MatrixOperations.addMatrixes(deltaWeightMatrix, MatrixOperations.
-                scalarMultiply(momentumParameter, lastWeightUpdates[i]));
-        lastWeightUpdates[i] = deltaWeightMatrix;
-        weightMatrix = MatrixOperations.addMatrixes(weightMatrix, deltaWeightMatrix);
-        return weightMatrix;
-    }
-
-    public Matrix updateBiases(Matrix biasMatrix, Matrix deltaMatrix, int i) {
-        Matrix deltaBiasMatrix = MatrixOperations.scalarMultiply(1, MatrixOperations.scalarMultiply(theta,
-                deltaMatrix));
-        deltaBiasMatrix = MatrixOperations.addMatrixes(deltaBiasMatrix, MatrixOperations.
-                scalarMultiply(momentumParameter, lastBiasUpdates[i]));
-        lastBiasUpdates[i] = deltaBiasMatrix;
-        biasMatrix = MatrixOperations.addMatrixes(biasMatrix, deltaBiasMatrix);
-        return biasMatrix;
     }
 
     public void forwardPropagation() {
-        sMatrices[0] = MatrixOperations.multiplyMatrixes(inputMatrix, weightMatrices[0]);
-        zMatrices[0] = MatrixOperations.tanh(sMatrices[0]);
-        derivativeSMatrices[0] = MatrixOperations.derivativeTanh(sMatrices[0]);
-        for (int i = 1; i < sMatrices.length - 1; i++) {
-            sMatrices[i] = MatrixOperations.multiplyMatrixes(zMatrices[i - 1], weightMatrices[i]);
-            zMatrices[i] = MatrixOperations.tanh(sMatrices[i]);
-            derivativeSMatrices[i] = MatrixOperations.derivativeTanh(sMatrices[i]);
+        if (isHiddenLayerCountZero) {
+            output = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(input, weightMatrices[0]), biasMatrices[0]);
+        } else {
+            sMatrices[0] = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(input, weightMatrices[0]), biasMatrices[0]);
+            zMatrices[0] = MatrixOperations.sigmoid(sMatrices[0]);
+            FMatrices[0] = MatrixOperations.transpose(MatrixOperations.derivativeSigmoid(sMatrices[0]));
+            for (int i = 1; i < sMatrices.length; i++) {
+                sMatrices[i] = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(zMatrices[i - 1], weightMatrices[i]), biasMatrices[i]);
+                zMatrices[i] = MatrixOperations.sigmoid(sMatrices[i]);
+                FMatrices[i] = MatrixOperations.transpose(MatrixOperations.derivativeSigmoid(sMatrices[i]));
+            }
+            output = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(zMatrices[zMatrices.length - 1],
+                    weightMatrices[weightMatrices.length - 1]), biasMatrices[biasMatrices.length - 1]);
         }
-        sMatrices[sMatrices.length - 1] = MatrixOperations.multiplyMatrixes(zMatrices[zMatrices.length - 2],
-                weightMatrices[weightMatrices.length - 1]);
-        zMatrices[zMatrices.length - 1] = MatrixOperations.tanh(sMatrices[sMatrices.length - 1]);
-        derivativeSMatrices[derivativeSMatrices.length - 1]
-                = MatrixOperations.derivativeTanh(sMatrices[sMatrices.length - 1]);
-        outputMatrix = zMatrices[zMatrices.length - 1];
     }
 
     public void backPropagation() {
-        deltaOutputMatrix = MatrixOperations.hadamardProduct(MatrixOperations.
-                transpose(derivativeSMatrices[derivativeSMatrices.length - 1]),
-                MatrixOperations.transpose(MatrixOperations.subtractMatrixes(outputMatrix, targetOutputMatrix)));
-        deltaSMatrices[0] = MatrixOperations.multiplyMatrixes(weightMatrices[weightMatrices.length - 1], deltaOutputMatrix);
-        deltaZMatrices[0] = MatrixOperations.hadamardProduct(MatrixOperations.
-                transpose(derivativeSMatrices[derivativeSMatrices.length - 2]), deltaSMatrices[0]);
-        weightMatrices[weightMatrices.length - 1]
-                = updateWeights(weightMatrices[weightMatrices.length - 1], deltaZMatrices[0], outputMatrix, 
-                        (weightMatrices.length - 1));
-        biasMatrices[biasMatrices.length - 1]
-                = updateBiases(biasMatrices[biasMatrices.length - 1], MatrixOperations.transpose(deltaOutputMatrix), 
-                        (weightMatrices.length - 1));
-        for (int i = 1; i < deltaSMatrices.length - 1; i++) {
-            deltaSMatrices[i] = MatrixOperations.multiplyMatrixes(weightMatrices[weightMatrices.length - (i + 1)], 
-                    deltaZMatrices[i - 1]);
-            deltaZMatrices[i] = MatrixOperations.hadamardProduct(MatrixOperations.
-                    transpose(derivativeSMatrices[derivativeSMatrices.length - (i + 2)]),
-                    deltaSMatrices[i]);
-            weightMatrices[weightMatrices.length - (i + 1)]
-                    = updateWeights(weightMatrices[weightMatrices.length - (i + 1)], deltaZMatrices[i],
-                            zMatrices[zMatrices.length - (i + 1)], (weightMatrices.length - (i + 1)));
-            biasMatrices[biasMatrices.length - (i + 1)]
-                    = updateBiases(biasMatrices[biasMatrices.length - (i + 1)], 
-                            MatrixOperations.transpose(deltaZMatrices[i - 1]), 
-                            (weightMatrices.length - (i + 1)));
+        deltaZMatrices[deltaZMatrices.length - 1] = MatrixOperations.transpose(MatrixOperations.subtractMatrices(output, targetOutput));
+
+        for (int i = (deltaZMatrices.length - 2); i > -1; i--) {
+            deltaZMatrices[i] = MatrixOperations.hadamardProduct(FMatrices[i],
+                    MatrixOperations.multiplyMatrixes(weightMatrices[i + 1], deltaZMatrices[i + 1]));
         }
-        deltaSMatrices[deltaSMatrices.length - 1]
-                = MatrixOperations.multiplyMatrixes(weightMatrices[0], deltaZMatrices[deltaZMatrices.length - 2]);//, weightMatrices[0]);
-        deltaZMatrices[zMatrices.length - 1] = deltaSMatrices[deltaSMatrices.length - 1];
-        weightMatrices[0]
-                = updateWeights(weightMatrices[0], deltaZMatrices[deltaZMatrices.length - 1],
-                        zMatrices[0], 0);
-        biasMatrices[0]
-                = updateBiases(biasMatrices[0], deltaZMatrices[deltaZMatrices.length - 2], 0);
+        updateWeights();
+        updateBiases();
+    }
+
+    public void updateWeights() {
+        Matrix deltaWeightUpdate = MatrixOperations.addMatrices(deltaWeight(deltaZMatrices[0], input), lastWeightUpdates[0]);
+        lastWeightUpdates[0] = deltaWeightUpdate;
+        weightMatrices[0] = MatrixOperations.addMatrices(weightMatrices[0], deltaWeightUpdate);
+        for (int i = 1; i < weightMatrices.length; i++) {
+            deltaWeightUpdate = MatrixOperations.addMatrices(deltaWeight(deltaZMatrices[i], zMatrices[i - 1]), lastWeightUpdates[i]);
+            lastWeightUpdates[i] = deltaWeightUpdate;
+            weightMatrices[i] = MatrixOperations.addMatrices(weightMatrices[i], deltaWeightUpdate);
+        }
+    }
+
+    public void updateBiases() {
+        Matrix deltaBiasUpdate;
+        for (int i = 0; i < biasMatrices.length; i++) {
+            deltaBiasUpdate = MatrixOperations.scalarMultiply(-1, MatrixOperations.scalarMultiply(eta,
+                    MatrixOperations.transpose(deltaZMatrices[i])));
+            deltaBiasUpdate = MatrixOperations.addMatrices(deltaBiasUpdate, MatrixOperations.
+                    scalarMultiply(momentumParameter, lastBiasUpdates[i]));
+            lastBiasUpdates[i] = deltaBiasUpdate;
+            biasMatrices[i] = MatrixOperations.addMatrices(biasMatrices[i], deltaBiasUpdate);
+        }
+    }
+
+    public Matrix deltaWeight(Matrix deltaMatrix, Matrix zMatrix) {
+        Matrix deltaWeightMatrix = MatrixOperations.scalarMultiply(-1, MatrixOperations.scalarMultiply(eta,
+                MatrixOperations.transpose(MatrixOperations.multiplyMatrixes(deltaMatrix, zMatrix))));
+        return deltaWeightMatrix;
     }
 
     public Matrix getInputMatrix() {
-        return inputMatrix;
+        return input;
     }
 
     public Matrix getOutputMatrix() {
-        return outputMatrix;
-    }
-    
-    public Matrix getTargetOutputMatrix(){
-        return targetOutputMatrix;
+        return output;
     }
 
-    public Matrix[] getWeightMatrixes() {
-        return weightMatrices;
+    public Matrix getTargetOutputMatrix() {
+        return targetOutput;
     }
-    
-    public Matrix getError(){
-        Matrix errorMatrix = MatrixOperations.multiplyMatrixes(MatrixOperations.
-                subtractMatrixes(outputMatrix, targetOutputMatrix), MatrixOperations.
-                subtractMatrixes(outputMatrix, targetOutputMatrix));
+
+    public Matrix getError() {
+        Matrix errorMatrix = MatrixOperations.multiplyMatrixes(MatrixOperations.subtractMatrices(output, targetOutput), MatrixOperations.subtractMatrices(output, targetOutput));
         return errorMatrix;
     }
 }
