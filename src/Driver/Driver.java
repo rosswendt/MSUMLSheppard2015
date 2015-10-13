@@ -14,23 +14,31 @@ public class Driver {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        // bounds for the x value:
         double lowerBound = -5;
         double upperBound = 10;
+        
         int dataSetSize = 4; // make sure this number is divisible by k
         int k = 2; // number of folds
+        
+        // number of x values:
         int n = 2;
 
+        // initialize dataset:
         double[][] xDataSet = initializeXDataSet(dataSetSize, n, lowerBound, upperBound);
         double[][] yDataSet = initializeYDataSet(xDataSet);
 
+        // set up subsets:
         int[][] subsets = initializeSubsets(dataSetSize, k);
 
+        // set up neural network:
         double[] matrixA = {0, 0};
         double[] matrixB = {0};
         int[] hiddenLayers = {3};
         Matrix meanSquaredError;
-
         NeuralNet neuralNet = new NeuralNet(matrixA, matrixB, hiddenLayers);
+        
+        // run cross validation:
         for (int j = 0; j < 100000000; j++) {
             for (int testCounter = 0; testCounter < k; testCounter++) {
                 meanSquaredError = new Matrix(matrixB);
