@@ -7,14 +7,11 @@ import NeuralNetHelper.*;
  * @author Angus Tomlinson
  */
 public final class NeuralNet {
-    private double upperBoundInitializationWeight = 1;
-    private double upperBoundInitializationBias = 1;
-    private double eta = 0.0001;
-    private double momentumParameter = 0.8;
+    private final double upperBoundInitializationWeight;
+    private final double upperBoundInitializationBias;
+    private final double eta;
+    private final double momentumParameter;
     
-    private int r = 1;
-    private int c = 2;
-
     private final boolean isHiddenLayerCountZero;
     private Matrix input;
     private Matrix output;
@@ -35,8 +32,6 @@ public final class NeuralNet {
         this.upperBoundInitializationWeight = upperBoundInitializationWeight;
         this.upperBoundInitializationBias = upperBoundInitializationBias;
         this.momentumParameter = momentumParameter;
-        this.r = r;
-        this.c = c;
         
         this.input = new Matrix(input);
         this.output = new Matrix(new double[targetOutput.length]);
