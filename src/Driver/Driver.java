@@ -14,34 +14,27 @@ public class Driver {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // bounds for the x value:
         double lowerBound = -5;
         double upperBound = 10;
-        
         int dataSetSize = 4; // make sure this number is divisible by k
         int k = 2; // number of folds
-        
-        // number of x values:
         int n = 2;
 
-        // initialize dataset:
         double[][] xDataSet = initializeXDataSet(dataSetSize, n, lowerBound, upperBound);
         double[][] yDataSet = initializeYDataSet(xDataSet);
 
-        // set up subsets:
         int[][] subsets = initializeSubsets(dataSetSize, k);
 
-        // set up neural network:
-        double[] matrixA = {0, 0};
-        double[] matrixB = {0};
-        int[] hiddenLayers = {3};
+        double[] inputLayer = new double[n];
+        double[] outputLayer = {0};
+        int[] hiddenLayers = {1};
         Matrix meanSquaredError;
-        NeuralNet neuralNet = new NeuralNet(matrixA, matrixB, hiddenLayers);
-        
-        // run cross validation:
-        for (int j = 0; j < 100000000; j++) {
+
+        NeuralNet neuralNet = new NeuralNet(inputLayer, outputLayer, hiddenLayers);
+        for (int j = 0; j < 1000000; j++) {
+            System.out.println("Epoch" + j + ":");
             for (int testCounter = 0; testCounter < k; testCounter++) {
-                meanSquaredError = new Matrix(matrixB);
+                meanSquaredError = new Matrix(outputLayer);
                 for (int trainingCounter = 0; trainingCounter < subsets.length; trainingCounter++) {
                     if (trainingCounter != testCounter) {
                         for (int i = 0; i < subsets[trainingCounter].length; i++) {
@@ -54,9 +47,8 @@ public class Driver {
                         }
                     }
                 }
-                System.out.println("Epoch" + j + ":");
                 System.out.println("MeanSquaredError for training set:" + meanSquaredError.getMatrixValues()[0][0] / ((k - 1)) * (dataSetSize / k));
-                meanSquaredError = new Matrix(matrixB);
+                meanSquaredError = new Matrix(outputLayer);
                 for (int i = 0; i < subsets[testCounter].length; i++) {
                     neuralNet.setInputMatrix(xDataSet[subsets[testCounter][i]]);
                     neuralNet.setTargetOutputMatrix(yDataSet[subsets[testCounter][i]]);
@@ -68,12 +60,57 @@ public class Driver {
                 System.out.println();
             }
         }
+        neuralNet.setInputMatrix(xDataSet[0]);
+        neuralNet.setTargetOutputMatrix(yDataSet[0]);
+        neuralNet.forwardPropagation();
+        System.out.println(neuralNet.getError().getMatrixValues()[0][0]);
+        
+//        double[] totalTargetOutput = new double[1];
+//        double[] totalOutput = new double[1];
+//        NeuralNet neuralNet = new NeuralNet(inputLayer, outputLayer, hiddenLayers);
+//        for (int j = 0; j < 100000000; j++) {
+//            System.out.println("Epoch" + j + ":");
+//            totalTargetOutput[0] = 0;
+//            totalOutput[0] = 0;
+//            for (int testCounter = 0; testCounter < k; testCounter++) {
+//                meanSquaredError = new Matrix(outputLayer);
+//                for (int trainingCounter = 0; trainingCounter < subsets.length; trainingCounter++) {
+//                    if (trainingCounter != testCounter) {
+//                        for (int i = 0; i < subsets[trainingCounter].length; i++) {
+//                            neuralNet.setInputMatrix(xDataSet[subsets[trainingCounter][i]]);
+//                            neuralNet.setTargetOutputMatrix(yDataSet[subsets[trainingCounter][i]]);
+//                            totalTargetOutput[0] += yDataSet[subsets[trainingCounter][i]][0];
+//                            neuralNet.forwardPropagation();
+//                            totalOutput[0] += neuralNet.getOutputMatrix().getMatrixValues()[0][0];
+//                            meanSquaredError = MatrixOperations.addMatrices(meanSquaredError, neuralNet.getError());
+//                            //System.out.println(neuralNet.getError().getMatrixValues()[0][0]);
+//                            //neuralNet.backPropagation();
+//                        }
+//                    }
+//                }
+//                totalOutput[0] = totalOutput[0] / ((k - 1) * subsets[0].length);
+//                totalTargetOutput[0] = totalTargetOutput[0] / ((k - 1) * subsets[0].length);
+//                neuralNet.setOutputMatrix(totalOutput);
+//                neuralNet.setTargetOutputMatrix(totalTargetOutput);
+//                neuralNet.backPropagation();
+//                System.out.println("MeanSquaredError for training set:" + meanSquaredError.getMatrixValues()[0][0] / ((k - 1)) * (dataSetSize / k));
+//                meanSquaredError = new Matrix(outputLayer);
+//                for (int i = 0; i < subsets[testCounter].length; i++) {
+//                    neuralNet.setInputMatrix(xDataSet[subsets[testCounter][i]]);
+//                    neuralNet.setTargetOutputMatrix(yDataSet[subsets[testCounter][i]]);
+//                    neuralNet.forwardPropagation();
+//                    meanSquaredError = MatrixOperations.addMatrices(meanSquaredError, neuralNet.getError());
+//                    //System.out.println(neuralNet.getError().getMatrixValues()[0][0]);
+//                }
+//                System.out.println("MeanSquaredError for test set:" + (meanSquaredError.getMatrixValues()[0][0] / (subsets[testCounter].length)));
+//                System.out.println();
+//            }
+//        }
     }
 
     public static double[][] initializeXDataSet(int samples, int n, double lowerBound, double upperBound) {
         Random rdm = new Random();
-        double stepCounter = (upperBound - lowerBound) / (samples * n);
-        double xValue = lowerBound;
+        //double stepCounter = (upperBound - lowerBound) / (samples * n);
         double[][] xDataSet = new double[samples][n];
         for (int i = 0; i < samples; i++) {
             for (int j = 0; j < n; j++) {
