@@ -6,21 +6,29 @@ package NeuralNetHelper;
  */
 public class Functions {
 
-    private static int outputYVal;
+    public static double computeRosenBrockOutVal(double[] x) { // rosenbrock function
+        // f(x) = sigma 100*(xi+1 - xi^2)^2 + (1-xi)^2
+        int y = 0;
+        for (int i = 0; i < x.length - 1; i++) {
+            y += ((1 - x[i]) * (1 - x[i])) + 100 * ((x[i + 1] - (x[i] * x[i])) * (x[i + 1] - (x[i] * x[i])));
+        }
 
-    public static double sigmoid(double x){
+        return y;
+    }
+
+    public static double sigmoid(double x){ //sigmoid function
         double y;
         y = 1 / (1 + Math.exp(-x));
         return y;
     }
     
-    public static double sigmoidDerivative(double x){
+    public static double sigmoidDerivative(double x){ //derivative of sigmoid function
         double y;
         y = sigmoid(x) * (1 - sigmoid(x));
         return y;
     }
     
-    public static double tanh(double x) {      //hyperbolic tangent
+    public static double tanh(double x) {   //hyperbolic tangent
         double y;
         double a = Math.exp(x);
         double b = Math.exp(0 - (x));
@@ -29,45 +37,29 @@ public class Functions {
         return y;
     }
 
-    public static double tanhDerivative(double x) {     //takes an array and applies the derivative of hyperbolic tangent to it. that deriv is 1-tanh^2
+    public static double tanhDerivative(double x) { //derivative of hyperbolic tangent: 1-tanh^2
         double tan;
         double y;
-        //for(int
         double a = Math.exp(x);
         double b = Math.exp(0 - (x));
         tan = ((a - b) / (a + b));
         y = (1 - (tan * tan));
-//        y = (2 / (a + b)) * (2 / (a + b));
 
         return y;
     }
 
-    public static double computeRosenBrockOutVal(double[] x) {
-        // f(x) = sigma 100*(xi+1 - xi^2)^2 + (1-xi)^2      <--wiki
-        //f(x,y) = (a-z)^2 + b(y-x^2)^2                     <--wiki
-        for (int i = 0; i < x.length - 1; i++) {
-            outputYVal += ((1 - x[i]) * (1 - x[i])) + 100 * ((x[i + 1] - (x[i] * x[i])) * (x[i + 1] - (x[i] * x[i])));
-        }
-
-        return outputYVal;
-    }
-
-    public static double gaussian(int r, int c, double x) {  //r is radius and c is center. Those need to be determined at methoud call
-        //double[] y = new double[x.length];              //set of points to put through
-        //for(int i=0; i<x.length; i++){
+    public static double gaussian(int r, int c, double x) { // gaussian function
         double y;
-        double d = (x - c) * (x - c);             //get the joke?
-        y = Math.exp(0 - ((d) / (r * r)));               //impluments gausian radial function
+        double d = (x - c) * (x - c);
+        y = Math.exp(0 - ((d) / (r * r)));
 
         return y;
     }
 
-    public static double gaussianDerivative(int r, int c, double x) {  //r is radius and c is center. Those need to be determined at methoud call
-        //double[] y = new double[x.length];              //set of points to put through
-        //for(int i=0; i<x.length; i++){
-        double d = (x - c) * (x - c);             //get the joke?
+    public static double gaussianDerivative(int r, int c, double x) { //derivative of gaussian function
+        double d = (x - c) * (x - c);
         double temp = Math.exp(0 - ((d) / (r * r)));
-        double y = ((2 * c * temp) / (r * r)) - ((2 * x * temp) / (r * r));               //impluments derivative of gausian radial function
+        double y = ((2 * c * temp) / (r * r)) - ((2 * x * temp) / (r * r));
 
         return y;
     }
