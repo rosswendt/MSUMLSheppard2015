@@ -9,10 +9,13 @@ public class Matrix {
     private final int columns;
     private final double[][] matrixValues;
     
-    /**
-     *
-     * @param initialMatrixValues
-     */
+    public Matrix(double[] initialMatrixValues){
+        rows = 1;
+        columns = initialMatrixValues.length;
+        matrixValues = new double[rows][columns];
+        System.arraycopy(initialMatrixValues, 0, matrixValues[0], 0, matrixValues[0].length);
+    }
+    
     public Matrix(double[][] initialMatrixValues){
         rows = initialMatrixValues.length;
         columns = initialMatrixValues[0].length;
@@ -20,13 +23,6 @@ public class Matrix {
         for(int i = 0; i < matrixValues.length; i++){
             System.arraycopy(initialMatrixValues[i], 0, matrixValues[i], 0, matrixValues[0].length);
         }
-    }
-    
-    public Matrix(double[] initialMatrixValues){
-        rows = 1;
-        columns = initialMatrixValues.length;
-        matrixValues = new double[rows][columns];
-        System.arraycopy(initialMatrixValues, 0, matrixValues[0], 0, matrixValues[0].length);
     }
     
     public int getRows(){
