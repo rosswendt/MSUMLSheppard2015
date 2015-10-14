@@ -22,6 +22,13 @@ public class Matrix {
         }
     }
     
+    public Matrix(double[] initialMatrixValues){
+        rows = 1;
+        columns = initialMatrixValues.length;
+        matrixValues = new double[rows][columns];
+        System.arraycopy(initialMatrixValues, 0, matrixValues[0], 0, matrixValues[0].length);
+    }
+    
     public int getRows(){
         return rows;
     }
