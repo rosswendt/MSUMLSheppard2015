@@ -50,7 +50,8 @@ public class Driver {
                         }
                     }
                 }
-                System.out.println("MeanSquaredError for training set:" + ((meanSquaredError.getMatrixValues()[0][0]) / meansSquaredErrorDivisor));
+                System.out.println("MeanSquaredError for the training set:" + ((meanSquaredError.getMatrixValues()[0][0]) / meansSquaredErrorDivisor));
+                System.out.println("Root Mean Squared Error for the training set:" + Math.sqrt((meanSquaredError.getMatrixValues()[0][0]) / meansSquaredErrorDivisor));
                 
                 meanSquaredError = new Matrix(new double[1][outputLayer.length]);
                 for (int i = 0; i < subsets[testCounter].length; i++) {
@@ -59,18 +60,16 @@ public class Driver {
                     neuralNet.forwardPropagation();
                     meanSquaredError = MatrixOperations.addMatrices(meanSquaredError, neuralNet.getError());
                 }
-                System.out.println("MeanSquaredError for test set:" + (meanSquaredError.getMatrixValues()[0][0] / (subsets[testCounter].length)));
+                System.out.println("MeanSquaredError for the test set:" + (meanSquaredError.getMatrixValues()[0][0] / (subsets[testCounter].length)));
+                System.out.println("Root Mean Squared Error for the test set:" + Math.sqrt((meanSquaredError.getMatrixValues()[0][0] / (subsets[testCounter].length))));
                 System.out.println();
             }
         }
-        neuralNet.setInputMatrix(xDataSet[0]);
-        neuralNet.setTargetOutputMatrix(yDataSet[0]);
-        neuralNet.forwardPropagation();
-        System.out.println(neuralNet.getError().getMatrixValues()[0][0]);
     }
 
     public static double[][] initializeXDataSet(int samples, int n, double lowerBound, double upperBound) {
         Random rdm = new Random();
+        //double stepCounter = (upperBound - lowerBound) / (samples * n);
         double[][] xDataSet = new double[samples][n];
         for (int i = 0; i < samples; i++) {
             for (int j = 0; j < n; j++) {
@@ -103,6 +102,7 @@ public class Driver {
                 boolean counterAssigned = false;
                 while (!counterAssigned) {
                     randomIndex = rdm.nextInt(dataSetSize);
+                    //System.out.println(randomIndex);
                     if (!containsValue(selectedIndexes, randomIndex)) {
                         subset[j] = randomIndex;
                         selectedIndexes[selectedIndexesCounter] = randomIndex;
