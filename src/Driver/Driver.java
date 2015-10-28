@@ -2,10 +2,7 @@ package Driver;
 import NeuralNet.NeuralNetDriver;
 import Math.ActivationFunctions.*;
 import DataPack.Regression.InputPack.*;
-import DataPack.Regression.InputPack.*;
 import DataPack.Regression.OutputPack.*;
-import DataPack.Regression.OutputPack.*;
-import Math.ActivationFunctions.*;
 import NeuralNet.*;
 import Math.Matrix;
 import NeuralNet.TrainingMethod.*;
@@ -48,8 +45,8 @@ public class Driver {
 
     public static double xValLowerBound = 0;
     public static double xValUpperBound = 500;
-    public static int dataSetSize = 1000; // make sure this number is divisible by k
-    public static int dimension = 5; 
+    public static int dataSetSize = 20; // make sure this number is divisible by k
+    public static int dimension = 1; 
     
     /*
     IN/OUT VALUE SELECTION
@@ -60,7 +57,7 @@ public class Driver {
     here too.
     */
     
-    static AbstractFunction activationFunction = new Gaussian(radius,center);
+    static AbstractFunction activationFunction = new Sigmoid();
     static TrainingMethodInterface trainingMethod = new BackPropagation();
     static GenerateInputValsInterface input = new Regression(dataSetSize, dimension, xValLowerBound, xValUpperBound);
     static AbstractGenerateOutputVals output = new TestFunction();
@@ -72,12 +69,12 @@ public class Driver {
     Tunable parameters for the Neural Net are as follows:
     */
 
-    public static double eta = .001;
-    public static double upperBoundWeight = 1; //what does this do?
-    public static double upperBoundBiasWeight = 1; //what does this do?
-    public static double momentumParameter = .1; 
-    public static int[] hiddenLayers = {100};
-    public static int epochLimit = 5;   
+    public static double eta = 0.3;
+    public static double upperBoundWeight = .1; //what does this do?
+    public static double upperBoundBiasWeight = .1; //what does this do?
+    public static double momentumParameter = .9; 
+    public static int[] hiddenLayers = {200,200,200};
+    public static int epochLimit = 1000;   
 
 
     /*

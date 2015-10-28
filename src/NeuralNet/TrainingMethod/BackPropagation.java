@@ -37,8 +37,10 @@ public class BackPropagation implements TrainingMethodInterface {
     public void updateBiases(NeuralNet neuralNet) {
         Matrix deltaBiasUpdate;
         for (int i = 0; i < neuralNet.biasMatrices.length; i++) {
-            deltaBiasUpdate = MatrixOperations.scalarMultiply(-1, MatrixOperations.scalarMultiply(neuralNet.eta, MatrixOperations.transpose(neuralNet.deltaZMatrices[i])));
-            deltaBiasUpdate = MatrixOperations.addMatrices(deltaBiasUpdate, MatrixOperations.scalarMultiply(neuralNet.momentumParameter, neuralNet.lastBiasUpdates[i]));
+            deltaBiasUpdate = MatrixOperations.scalarMultiply(-1, MatrixOperations.scalarMultiply(neuralNet.eta,
+                    MatrixOperations.transpose(neuralNet.deltaZMatrices[i])));
+            deltaBiasUpdate = MatrixOperations.addMatrices(deltaBiasUpdate, MatrixOperations.
+                    scalarMultiply(neuralNet.momentumParameter, neuralNet.lastBiasUpdates[i]));
             neuralNet.lastBiasUpdates[i] = deltaBiasUpdate;
             neuralNet.biasMatrices[i] = MatrixOperations.addMatrices(neuralNet.biasMatrices[i], deltaBiasUpdate);
         }

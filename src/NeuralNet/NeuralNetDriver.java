@@ -30,52 +30,6 @@ public class NeuralNetDriver {
             //NOT IMPLEMENTED runTestWithoutOutput();
         }
     }
-
-    /*private void runTestWithOutput() {
-        for (int epoch = 0; epoch < neuralNet.getEpochLimit(); epoch++ ) {
-            System.out.println("********* EPOCH " + epoch + ":" + "\n");
-            for (int testCounter = 0; testCounter < D.k; testCounter++) {
-                Driver.meanSquaredError = new Matrix(new double[1][D.outputLayer.length]);
-                for (int trainingCounter = 0; trainingCounter < Driver.subsets.length; trainingCounter++) {
-                    if (trainingCounter != testCounter) {
-                        
-                        
-                        This sets up the initial input and output matrices,
-                        and then does feedforward and backprop.
-                        
-                        
-                        //
-                        for (int i = 0; i < D.subsets[trainingCounter].length; i++) {
-                            neuralNet.setInputMatrix(D.xDataSet[D.subsets[trainingCounter][i]]);
-                            neuralNet.setTargetOutputMatrix(D.yDataSet[D.subsets[trainingCounter][i]]);
-                            neuralNet.forwardPropagation();
-                            D.meanSquaredError = MatrixOperations.addMatrices(D.meanSquaredError, neuralNet.getError());
-                            neuralNet.getTrainingMethodInterface().applyMethod(neuralNet);
-                            //neuralNet.backPropagation();
-                        }
-                    }
-                }
-                //System.out.println("MeanSquaredError for the training set:" + ((D.meanSquaredError.getArray()[0][0]) / D.meansSquaredErrorDivisor));
-                System.out.println("RMS TRAIN:" + Math.sqrt((D.meanSquaredError.getArray()[0][0]) / D.meansSquaredErrorDivisor) + "\n") ;
-                
-                
-                D.meanSquaredError = new Matrix(new double[1][D.outputLayer.length]);
-                
-                for (int i = 0; i < D.subsets[testCounter].length; i++) {
-                    neuralNet.setInputMatrix(D.xDataSet[D.subsets[testCounter][i]]);
-                    neuralNet.setTargetOutputMatrix(D.yDataSet[D.subsets[testCounter][i]]);
-                    neuralNet.forwardPropagation();
-                    D.meanSquaredError = MatrixOperations.addMatrices(D.meanSquaredError, neuralNet.getError());
-                }
-                //System.out.println("MeanSquaredError for the test set:" + (D.meanSquaredError.getArray()[0][0] / (D.subsets[testCounter].length)));
-                System.out.println("RMS TEST:" + Math.sqrt((D.meanSquaredError.getArray()[0][0] / (D.subsets[testCounter].length))) + "\n");
-                //trainSum += Math.sqrt((D.meanSquaredError.getArray()[0][0]) / D.meansSquaredErrorDivisor);
-                //testSum += Math.sqrt((D.meanSquaredError.getArray()[0][0] / (D.subsets[testCounter].length)));
-
-
-            }
-        }
-    } */  
     
     public void runWithOutput() {
         for (int epoch = 0; epoch < neuralNet.getEpochLimit(); epoch++) {

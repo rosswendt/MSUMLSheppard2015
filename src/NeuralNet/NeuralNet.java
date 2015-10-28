@@ -132,48 +132,7 @@ public final class NeuralNet implements NetworkInterface {
         }
     }
 
-    // back propagation:
-    // Delta(out) = (output - targetOutput)^T
-    // Delta(i) = hadamard product of F(i) and (W(i) * Delta(i + 1))
-    /*public void backPropagation() {
-        deltaZMatrices[deltaZMatrices.length - 1] = MatrixOperations.transpose(MatrixOperations.subtractMatrices(output, targetOutput));
-
-        for (int i = (deltaZMatrices.length - 2); i > -1; i--) {
-            deltaZMatrices[i] = MatrixOperations.hadamardProduct(FMatrices[i],
-                    MatrixOperations.multiplyMatrixes(weightMatrices[i + 1], deltaZMatrices[i + 1]));
-        }
-        updateWeights();
-        updateBiases();
-    }
-
-    // updates the weights:
-    // for the first weights: deltaW(1) = -eta * (Delta(1) * input)^T
-    // for the other weights: deltaW(i) = -eta * (Delta(i) * Z(i - 1))^T
-    public void updateWeights() {
-        Matrix deltaWeightUpdate = MatrixOperations.addMatrices(deltaWeight(deltaZMatrices[0], input), lastWeightUpdates[0]);
-        lastWeightUpdates[0] = deltaWeightUpdate;
-        weightMatrices[0] = MatrixOperations.addMatrices(weightMatrices[0], deltaWeightUpdate);
-        for (int i = 1; i < weightMatrices.length; i++) {
-            deltaWeightUpdate = MatrixOperations.addMatrices(deltaWeight(deltaZMatrices[i], zMatrices[i - 1]), lastWeightUpdates[i]);
-            lastWeightUpdates[i] = deltaWeightUpdate;
-            weightMatrices[i] = MatrixOperations.addMatrices(weightMatrices[i], deltaWeightUpdate);
-        }
-    }
-
-    // updates the biases:
-    // for biases: deltaBias(i) = -eta * (Delta(i))^T
-    public void updateBiases() {
-        Matrix deltaBiasUpdate;
-        for (int i = 0; i < biasMatrices.length; i++) {
-            deltaBiasUpdate = MatrixOperations.scalarMultiply(-1, MatrixOperations.scalarMultiply(eta,
-                    MatrixOperations.transpose(deltaZMatrices[i])));
-            deltaBiasUpdate = MatrixOperations.addMatrices(deltaBiasUpdate, MatrixOperations.
-                    scalarMultiply(momentumParameter, lastBiasUpdates[i]));
-            lastBiasUpdates[i] = deltaBiasUpdate;
-            biasMatrices[i] = MatrixOperations.addMatrices(biasMatrices[i], deltaBiasUpdate);
-        }
-    }*/
-
+    @Override
     public Matrix deltaWeight(Matrix deltaMatrix, Matrix zMatrix) {
         Matrix deltaWeightMatrix = MatrixOperations.scalarMultiply(-1, MatrixOperations.scalarMultiply(eta,
                 MatrixOperations.transpose(MatrixOperations.multiplyMatrixes(deltaMatrix, zMatrix))));
