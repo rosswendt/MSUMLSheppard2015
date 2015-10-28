@@ -7,7 +7,7 @@ package Math;
 public class Matrix {
     private final int rows;
     private final int columns;
-    private final double[][] matrixValues;
+    private double[][] matrixValues;
     
     /**
      *

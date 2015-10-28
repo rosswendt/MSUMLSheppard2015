@@ -7,11 +7,11 @@ public class TestFunction extends AbstractGenerateOutputVals {
     
     /***** CONTAINS SIMPLE SUM FUNCTION TO TEST NEURAL NET*****/
 
-    double outVal = 0;
+
     
     @Override
     public double computeFunction(double[] x) {
-
+    double outVal = 0;
         for (int i = 0; i < x.length; i++) {
             outVal += x[i];
         }

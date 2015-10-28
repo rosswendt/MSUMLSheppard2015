@@ -15,7 +15,7 @@ public class HyperbolicTangent extends AbstractFunction {
 
     @Override
     public double functionDerivative(double x) {
-       double y = 1 - Math.pow(function(x), 2);
+       double y = 1 - Math.pow(Math.tanh(x), 2);
 
         return y;    
     }

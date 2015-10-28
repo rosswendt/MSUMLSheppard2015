@@ -159,8 +159,14 @@ public final class MatrixNeuralNet extends NetworkInterface {
 
     // calculates the error: E = (1 / 2) * (output - targetOutput)^2
     public Matrix getError() {
-        Matrix errorMatrix = MatrixOperations.scalarMultiply(0.5, MatrixOperations.multiplyMatrixes(MatrixOperations.subtractMatrices(output, targetOutput), 
-                MatrixOperations.subtractMatrices(output, targetOutput)));
+        Matrix errorPartOne = MatrixOperations.subtractMatrices(targetOutput, output);
+        //Matrix errorMatrix = errorPartOne;
+        Matrix squareError = MatrixOperations.multiplyMatrixes(errorPartOne, errorPartOne);
+        
+        Matrix errorMatrix = MatrixOperations.scalarMultiply(0.5,squareError);
+        
+        //Matrix errorMatrix = MatrixOperations.scalarMultiply(0.5, MatrixOperations.multiplyMatrixes(MatrixOperations.subtractMatrices(output, targetOutput), 
+        //       MatrixOperations.subtractMatrices(output, targetOutput)));
         return errorMatrix;
     }
 
