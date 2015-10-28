@@ -1,7 +1,7 @@
 package NeuralNet.TrainingMethod;
 
 import NeuralNet.NetworkInterface;
-import NeuralNet.NeuralNet;
+import NeuralNet.MatrixNeuralNet;
 
 /**
  *
@@ -9,8 +9,8 @@ import NeuralNet.NeuralNet;
  */
 public interface TrainingMethodInterface {
     
-    void applyMethod(NeuralNet N);
-    void updateWeights(NeuralNet N);
-    void updateBiases(NeuralNet N);
+    void applyMethod(MatrixNeuralNet N);
+    void updateWeights(MatrixNeuralNet N);
+    void updateBiases(MatrixNeuralNet N);
     
 }

@@ -1,7 +1,5 @@
 package Math.ActivationFunctions;
 
-import Math.Matrix;
-
 /**
  *
  * @author Ross Wendt

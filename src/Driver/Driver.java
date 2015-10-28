@@ -43,10 +43,10 @@ public class Driver {
     Changes these values to affect the regression parameters;
     */
 
-    public static double xValLowerBound = 0;
-    public static double xValUpperBound = 500;
-    public static int dataSetSize = 20; // make sure this number is divisible by k
-    public static int dimension = 1; 
+    public static double xValLowerBound = -1;
+    public static double xValUpperBound = 1;
+    public static int dataSetSize = 1000; // make sure this number is divisible by k
+    public static int dimension = 5; 
     
     /*
     IN/OUT VALUE SELECTION
@@ -57,7 +57,7 @@ public class Driver {
     here too.
     */
     
-    static AbstractFunction activationFunction = new Sigmoid();
+    static AbstractFunction activationFunction = new HyperbolicTangent();
     static TrainingMethodInterface trainingMethod = new BackPropagation();
     static GenerateInputValsInterface input = new Regression(dataSetSize, dimension, xValLowerBound, xValUpperBound);
     static AbstractGenerateOutputVals output = new TestFunction();
@@ -69,11 +69,11 @@ public class Driver {
     Tunable parameters for the Neural Net are as follows:
     */
 
-    public static double eta = 0.3;
+    public static double eta = 0.001;
     public static double upperBoundWeight = .1; //what does this do?
     public static double upperBoundBiasWeight = .1; //what does this do?
     public static double momentumParameter = .9; 
-    public static int[] hiddenLayers = {200,200,200};
+    public static int[] hiddenLayers = {80};
     public static int epochLimit = 1000;   
 
 
@@ -101,9 +101,9 @@ public class Driver {
      * 
      */
                     
-    NetworkInterface netInt = new NeuralNet(inputLayer, outputLayer, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
+    NetworkInterface netInt = new MatrixNeuralNet(inputLayer, outputLayer, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
     
-    //NetworkInterface netInt = new NeuralNet(inputLayer, outputLayer, hiddenLayers, eta, upperBoundWeight, upperBoundBiasWeight, momentumParameter, epochLimit, isHiddenLayerZero, activationFunction, trainingMethod);
+    //NetworkInterface netInt = new MatrixNeuralNet(inputLayer, outputLayer, hiddenLayers, eta, upperBoundWeight, upperBoundBiasWeight, momentumParameter, epochLimit, isHiddenLayerZero, activationFunction, trainingMethod);
 
 
     /*************************************************************************/
@@ -134,7 +134,7 @@ public class Driver {
             }
 
             
-            NeuralNet nNet = new NeuralNet(inputLayer, outputLayer, hiddenLayers, eta, upperBoundWeight, upperBoundBiasWeight, momentumParameter, epochLimit, activationFunction, trainingMethod);
+            MatrixNeuralNet nNet = new MatrixNeuralNet(inputLayer, outputLayer, hiddenLayers, eta, upperBoundWeight, upperBoundBiasWeight, momentumParameter, epochLimit, activationFunction, trainingMethod);
             NeuralNetDriver nNetHelper = new NeuralNetDriver(nNet);
             nNetHelper.runTest(runWithOutput);
             break; //gets us out of the loop

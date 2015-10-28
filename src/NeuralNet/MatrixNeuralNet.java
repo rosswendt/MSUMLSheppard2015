@@ -13,7 +13,7 @@ import NeuralNet.TrainingMethod.TrainingMethodInterface;
  *
  * @author Angus Tomlinson
  */
-public final class NeuralNet implements NetworkInterface {
+public final class MatrixNeuralNet extends NetworkInterface {
     private final double upperBoundInitializationWeight;
     private final double upperBoundInitializationBias;
     public final double eta;
@@ -32,13 +32,12 @@ public final class NeuralNet implements NetworkInterface {
     public final Matrix[] deltaZMatrices;
     public final Matrix[] lastWeightUpdates;
     public final Matrix[] lastBiasUpdates;
-    private int epochLimit;
     
     private AbstractFunction functionInterface;
     private TrainingMethodInterface trainingMethodInterface;
 
     // initialize the RBF
-    public NeuralNet(double[] input, double[] targetOutput, int[] hiddenLayers, double upperBoundInitializationWeight, 
+    public MatrixNeuralNet(double[] input, double[] targetOutput, int[] hiddenLayers, double upperBoundInitializationWeight, 
             double upperBoundInitializationBias, double eta, double momentumParameter, int inEpochLimit, 
             AbstractFunction inActivationFunctionInterface,
             TrainingMethodInterface inTrainingMethodInterface) {
@@ -132,14 +131,12 @@ public final class NeuralNet implements NetworkInterface {
         }
     }
 
-    @Override
     public Matrix deltaWeight(Matrix deltaMatrix, Matrix zMatrix) {
         Matrix deltaWeightMatrix = MatrixOperations.scalarMultiply(-1, MatrixOperations.scalarMultiply(eta,
                 MatrixOperations.transpose(MatrixOperations.multiplyMatrixes(deltaMatrix, zMatrix))));
         return deltaWeightMatrix;
     }
     
-    @Override
     public void setInputMatrix(double[] inputMatrix){
         input = new Matrix(inputMatrix);
     }
@@ -148,46 +145,31 @@ public final class NeuralNet implements NetworkInterface {
         targetOutput = new Matrix(outputMatrix);
     }
     
-    @Override
     public Matrix getInputMatrix() {
         return input;
     }
 
-    @Override
     public Matrix getTargetOutputMatrix() {
         return targetOutput;
     }
     
-    @Override
     public void setTargetOutputMatrix(double[] targetOutputMatrix){
         targetOutput = new Matrix(targetOutputMatrix);
     }
 
     // calculates the error: E = (1 / 2) * (output - targetOutput)^2
-    @Override
     public Matrix getError() {
         Matrix errorMatrix = MatrixOperations.scalarMultiply(0.5, MatrixOperations.multiplyMatrixes(MatrixOperations.subtractMatrices(output, targetOutput), 
                 MatrixOperations.subtractMatrices(output, targetOutput)));
         return errorMatrix;
     }
-    
-    @Override
-    public int getEpochLimit() {
-        return epochLimit;
-    }
-    
-    @Override
-    public Matrix getOutputMatrix() {
-        return output;
-    }
-    
-    @Override
-    public void setEpochLimit(int in) {
-        epochLimit = in;
-    }
 
-    @Override
+        
     public TrainingMethodInterface getTrainingMethodInterface() {
         return trainingMethodInterface;
+    }
+    
+    public Matrix getOutputMatrix() {
+        return output;
     }
 }

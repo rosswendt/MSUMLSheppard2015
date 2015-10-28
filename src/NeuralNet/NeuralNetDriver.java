@@ -3,7 +3,7 @@ package NeuralNet;
 import Driver.Driver;
 import Math.Matrix;
 import Math.MatrixOperations;
-import NeuralNet.NeuralNet;
+import NeuralNet.MatrixNeuralNet;
 import NeuralNet.TrainingMethod.TrainingMethodInterface;
 
 /**
@@ -16,10 +16,10 @@ public class NeuralNetDriver {
     double trainSum = 0;
     
     boolean runWithOutput = true;
-    NeuralNet neuralNet;
+    MatrixNeuralNet neuralNet;
     Driver D = new Driver();
 
-    public NeuralNetDriver(NeuralNet inNeuralNet) {
+    public NeuralNetDriver(MatrixNeuralNet inNeuralNet) {
         neuralNet = inNeuralNet;
     }
     

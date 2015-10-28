@@ -8,10 +8,9 @@
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/NeuralNet/TrainingMethod/GeneticAlgorithm.java</file>
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/Math/ActivationFunctions/Sigmoid.java</file>
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/DataPack/Regression/InputPack/GenerateInputValsInterface.java</file>
+            <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/NeuralNet/MatrixNeuralNet.java</file>
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/Math/ActivationFunctions/HyperbolicTangent.java</file>
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/Driver/Driver.java</file>
-            <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/DataPack/Regression/OutputPack/OutputPackHelper.java</file>
-            <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/NeuralNet/NeuralNet.java</file>
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/Driver/DriverHelper.java</file>
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/DataPack/Regression/InputPack/Regression.java</file>
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/Math/Matrix.java</file>
@@ -19,6 +18,7 @@
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/NeuralNet/TrainingMethod/TrainingMethodInterface.java</file>
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/NeuralNet/NeuralNetDriver.java</file>
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/Math/ActivationFunctions/AbstractFunction.java</file>
+            <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/NeuralNet/ArrayNeuralNet.java</file>
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/NeuralNet/TrainingMethod/BackPropagation.java</file>
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/DataPack/Regression/OutputPack/AbstractGenerateOutputVals.java</file>
             <file>file:/F:/Google%20Drive/My%20Homework/Machine%20Learning/RossRefactor/MSUMLSheppard2015-AngusDev/src/Math/ActivationFunctions/Gaussian.java</file>

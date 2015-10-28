@@ -36,9 +36,13 @@ public class MatrixOperations {
     
     public static Matrix randomlyInitializeMatrix(Matrix a, double upperBound){
         Random randomGenerator = new Random();
+        //System.out.print(randomGenerator.nextDouble() + " ");
         for(int i = 0; i < a.getRows(); i++){
             for(int j = 0; j < a.getColumns(); j++){
-                a.getArray()[i][j] = (randomGenerator.nextDouble() * (2 * upperBound)) - upperBound;
+                double lowerBound = 0;
+                double randomValue = lowerBound + (upperBound - lowerBound) * randomGenerator.nextDouble();
+                //a.getArray()[i][j] = (randomGenerator.nextDouble() * (2 * upperBound)) - upperBound;
+                a.getArray()[i][j] = randomValue;
             }
         }
         return a;
