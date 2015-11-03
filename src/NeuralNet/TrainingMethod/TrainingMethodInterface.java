@@ -10,7 +10,7 @@ import NeuralNet.MatrixNeuralNet;
 public interface TrainingMethodInterface {
     
     void applyMethod(MatrixNeuralNet N);
-    void updateWeights(MatrixNeuralNet N);
-    void updateBiases(MatrixNeuralNet N);
+    //void updateWeights(MatrixNeuralNet N);
+    //void updateBiases(MatrixNeuralNet N);
     
 }

@@ -46,6 +46,7 @@ public class NeuralNetDriver {
                             neuralNet.forwardPropagation();
                             D.meanSquaredErrorTraining = MatrixOperations.addMatrices(D.meanSquaredErrorTraining, neuralNet.getError());
                             neuralNet.getTrainingMethodInterface().applyMethod(neuralNet);
+                            //neuralNet.getTrainingMethodInterface().updateWeights(neuralNet);
                         }
                     }
                 }

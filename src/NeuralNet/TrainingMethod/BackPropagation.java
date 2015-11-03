@@ -13,15 +13,17 @@ public class BackPropagation implements TrainingMethodInterface {
 
     @Override
     public void applyMethod(MatrixNeuralNet neuralNet) {
-        neuralNet.deltaZMatrices[neuralNet.deltaZMatrices.length - 1] = MatrixOperations.transpose(MatrixOperations.subtractMatrices(neuralNet.output, neuralNet.targetOutput));
+        
+        
+        neuralNet.deltaZMatrices[neuralNet.deltaZMatrices.length - 1] = MatrixOperations.transpose(MatrixOperations.subtractMatrices(neuralNet.targetOutput, neuralNet.output));
         for (int i = neuralNet.deltaZMatrices.length - 2; i > -1; i--) {
             neuralNet.deltaZMatrices[i] = MatrixOperations.hadamardProduct(neuralNet.FMatrices[i], MatrixOperations.multiplyMatrixes(neuralNet.weightMatrices[i + 1], neuralNet.deltaZMatrices[i + 1]));
         }
+        
         updateWeights(neuralNet);
         updateBiases(neuralNet);
     }
 
-    @Override
     public void updateWeights(MatrixNeuralNet neuralNet) {
         Matrix deltaWeightUpdate = MatrixOperations.addMatrices(neuralNet.deltaWeight(neuralNet.deltaZMatrices[0], neuralNet.input), neuralNet.lastWeightUpdates[0]);
         neuralNet.lastWeightUpdates[0] = deltaWeightUpdate;
@@ -33,7 +35,6 @@ public class BackPropagation implements TrainingMethodInterface {
         }
     }
 
-    @Override
     public void updateBiases(MatrixNeuralNet neuralNet) {
         Matrix deltaBiasUpdate;
         for (int i = 0; i < neuralNet.biasMatrices.length; i++) {

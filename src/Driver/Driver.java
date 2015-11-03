@@ -44,8 +44,8 @@ public class Driver {
     */
 
     public static double xValLowerBound = 0;
-    public static double xValUpperBound = 500;
-    public static int dataSetSize = 100; // make sure this number is divisible by k
+    public static double xValUpperBound = 2;
+    public static int dataSetSize = 2; // make sure this number is divisible by k
     public static int dimension = 1; 
     
     /*
@@ -83,7 +83,7 @@ public class Driver {
     k sets the number of folds for k-fold cross validation.
     */
 
-    public static int k = 5; // number of folds
+    public static int k = 1; // number of folds
 
 
     /*
