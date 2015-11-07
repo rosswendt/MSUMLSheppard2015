@@ -10,7 +10,6 @@ import NeuralNet.MatrixNeuralNet;
  * @author Ross Wendt
  */
 public class BackPropagation implements TrainingMethodInterface {
-    MatrixNeuralNet neuralNet = TrainingMethodInterface.neuralNet;
     
     @Override
     public void applyMethod() {

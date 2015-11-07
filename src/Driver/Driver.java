@@ -50,8 +50,8 @@ public class Driver {
     Changes these values to affect the regression parameters;
     */
 
-    public static double xValLowerBound = 0;
-    public static double xValUpperBound = 2;
+    public static double xValLowerBound = -.1;
+    public static double xValUpperBound = .1;
     public static int dataSetSize = 100; // make sure this number is divisible by k
     public static int dimension = 5; 
     
@@ -62,12 +62,12 @@ public class Driver {
     Tunable parameters for the Neural Net are as follows:
     */
 
-    public static double eta = 0.3;
+    public static double eta = 0.0001;
     public static double upperBoundWeight = 1.0; //what does this do?
     public static double upperBoundBiasWeight = 1.0; //what does this do?
     public static double momentumParameter = .1; 
     public static int[] hiddenLayers = {100, 100}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
-    public static int epochLimit = 1000;   
+    public static int epochLimit = 10;   
 
 
     /*
@@ -79,8 +79,8 @@ public class Driver {
     here too.
     */
     
-    static AbstractFunction activationFunction = new HyperbolicTangent();
-    static TrainingMethodInterface trainingMethod = new DifferentialEvolution();
+    static AbstractFunction activationFunction = new Sigmoid();
+    static TrainingMethodInterface trainingMethod = new BackPropagation();
     static GenerateInputValsInterface input = new Regression(dataSetSize, dimension, xValLowerBound, xValUpperBound);
     static AbstractGenerateOutputVals output = new TestFunction();
 
@@ -122,14 +122,15 @@ public class Driver {
     public static double[][] yDataSet = output.initializeYDataSet(xDataSet);    
     
     //public static boolean isHiddenLayerZero = false;
-    public static Matrix meanSquaredError;
-    public int meansSquaredErrorDivisor = (k - 1) * (subsets[0].length);       
+    public static Matrix meanSquaredError;     
     public static int[][] subsets = DriverHelper.initializeSubsets(dataSetSize, k);
+    public static int meansSquaredErrorDivisor = (k - 1) * (subsets[0].length);  
     public static double[][] inputLayer = xDataSet;
     public static double[][] outputLayer = yDataSet;
-    public Matrix meanSquaredErrorTraining;
-    public Matrix meanSquaredErrorTesting;            
-    public static MatrixNeuralNet nNet = new MatrixNeuralNet(xDataSet, yDataSet, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
+    public static double[][] targetOutput = yDataSet;
+    public static Matrix meanSquaredErrorTraining;
+    public static Matrix meanSquaredErrorTesting;            
+    public static MatrixNeuralNet nNet = new MatrixNeuralNet(inputLayer, targetOutput, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
     public static NeuralNetDriver nNetHelper = new NeuralNetDriver(nNet);
     
 

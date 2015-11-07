@@ -4,6 +4,7 @@ import Math.ActivationFunctions.AbstractFunction;
 import Math.Matrix;
 import Math.MatrixOperations;
 import NeuralNet.TrainingMethod.TrainingMethodInterface;
+import Driver.*;
 
 /**
  *
@@ -51,7 +52,7 @@ public final class MatrixNeuralNet extends NetworkInterface {
         
         this.input = new Matrix(input);
         this.output = new Matrix(new double[targetOutput.length]);
-        this.targetOutput = new Matrix(targetOutput);
+        this.targetOutput = MatrixOperations.transpose(new Matrix(Driver.yDataSet));
 
         isHiddenLayerCountZero = (hiddenLayers.length == 0);
 
@@ -141,9 +142,9 @@ public final class MatrixNeuralNet extends NetworkInterface {
         input = new Matrix(inputMatrix);
     }
     
-    public void setOutputMatrix(double[] outputMatrix){
-        targetOutput = new Matrix(outputMatrix);
-    }
+    //public void setOutputMatrix(double[] outputMatrix){
+    //    targetOutput = new Matrix(outputMatrix);
+    //}
     
     public Matrix getInputMatrix() {
         return input;
@@ -153,20 +154,19 @@ public final class MatrixNeuralNet extends NetworkInterface {
         return targetOutput;
     }
     
-    public void setTargetOutputMatrix(double[] targetOutputMatrix){
-        targetOutput = new Matrix(targetOutputMatrix);
-    }
+    //public void setTargetOutputMatrix(double[] targetOutputMatrix){
+    //    targetOutput = new Matrix(targetOutputMatrix);
+    //}
 
     // calculates the error: E = (1 / 2) * (output - targetOutput)^2
     public Matrix getError() {
+
         Matrix errorPartOne = MatrixOperations.subtractMatrices(targetOutput, output);
-        //Matrix errorMatrix = errorPartOne;
+
         Matrix squareError = MatrixOperations.multiplyMatrixes(errorPartOne, errorPartOne);
         
         Matrix errorMatrix = MatrixOperations.scalarMultiply(0.5,squareError);
-        
-        //Matrix errorMatrix = MatrixOperations.scalarMultiply(0.5, MatrixOperations.multiplyMatrixes(MatrixOperations.subtractMatrices(output, targetOutput), 
-        //       MatrixOperations.subtractMatrices(output, targetOutput)));
+
         return errorMatrix;
     }
 
