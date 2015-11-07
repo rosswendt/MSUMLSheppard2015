@@ -50,8 +50,8 @@ public class Driver {
     Changes these values to affect the regression parameters;
     */
 
-    public static double xValLowerBound = -.1;
-    public static double xValUpperBound = .1;
+    public static double xValLowerBound = 0;
+    public static double xValUpperBound = 2;
     public static int dataSetSize = 100; // make sure this number is divisible by k
     public static int dimension = 5; 
     
@@ -67,7 +67,7 @@ public class Driver {
     public static double upperBoundBiasWeight = 1.0; //what does this do?
     public static double momentumParameter = .001; 
     public static int[] hiddenLayers = {100, 100}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
-    public static int epochLimit = 10;   
+    public static int epochLimit = 1000;   
 
 
     /*
