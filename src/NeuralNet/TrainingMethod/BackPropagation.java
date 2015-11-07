@@ -10,9 +10,10 @@ import NeuralNet.MatrixNeuralNet;
  * @author Ross Wendt
  */
 public class BackPropagation implements TrainingMethodInterface {
-
+    MatrixNeuralNet neuralNet = TrainingMethodInterface.neuralNet;
+    
     @Override
-    public void applyMethod(MatrixNeuralNet neuralNet) {
+    public void applyMethod() {
         
         
         neuralNet.deltaZMatrices[neuralNet.deltaZMatrices.length - 1] = MatrixOperations.transpose(MatrixOperations.subtractMatrices(neuralNet.targetOutput, neuralNet.output));

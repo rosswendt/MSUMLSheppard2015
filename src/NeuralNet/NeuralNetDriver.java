@@ -45,7 +45,7 @@ public class NeuralNetDriver {
                             neuralNet.setTargetOutputMatrix(D.yDataSet[D.subsets[trainingCounter][i]]);
                             neuralNet.forwardPropagation();
                             D.meanSquaredErrorTraining = MatrixOperations.addMatrices(D.meanSquaredErrorTraining, neuralNet.getError());
-                            neuralNet.getTrainingMethodInterface().applyMethod(neuralNet);
+                            neuralNet.getTrainingMethodInterface().applyMethod();
                             //neuralNet.getTrainingMethodInterface().updateWeights(neuralNet);
                         }
                     }
@@ -55,6 +55,7 @@ public class NeuralNetDriver {
                     neuralNet.setInputMatrix(D.xDataSet[D.subsets[testCounter][i]]);
                     neuralNet.setTargetOutputMatrix(D.yDataSet[D.subsets[testCounter][i]]);
                     neuralNet.forwardPropagation();
+                    neuralNet.getTrainingMethodInterface().applyMethod();
                     D.meanSquaredErrorTesting = MatrixOperations.addMatrices(D.meanSquaredErrorTesting, neuralNet.getError());
                 }
             }

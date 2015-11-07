@@ -4,15 +4,26 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="CSCI 232">
             <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/Math/MatrixOperations.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/NeuralNet/TrainingMethod/EvolutionStrategy.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/DataPack/InputFile/DataPackInputFromFile.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/NeuralNet/NetworkInterface.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/Math/ActivationFunctions/Sigmoid.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/Driver/DriverHelper.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/NeuralNet/TrainingMethod/TrainingMethodInterface.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/DataPack/Regression/InputPack/Regression.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/NeuralNet/MatrixNeuralNet.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/Math/Matrix.java</file>
             <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/DataPack/Regression/OutputPack/TestFunction.java</file>
             <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/DataPack/Regression/OutputPack/Rosenbrock.java</file>
-            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/DataPack/InputFile/DataPackInputFromFile.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/NeuralNet/ArrayNeuralNet.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/Math/ActivationFunctions/AbstractFunction.java</file>
             <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/Driver/Driver.java</file>
             <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/NeuralNet/NeuralNetDriver.java</file>
             <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/NeuralNet/TrainingMethod/BackPropagation.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/NeuralNet/TrainingMethod/DifferentialEvolution.java</file>
             <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/DataPack/Regression/InputPack/GenerateInputValsInterface.java</file>
-            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/DataPack/Regression/InputPack/Regression.java</file>
-            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/NeuralNet/MatrixNeuralNet.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/Math/ActivationFunctions/HyperbolicTangent.java</file>
+            <file>file:/F:/Google%20Drive/github%20stuff/MSUMLSheppard2015/src/NeuralNet/TrainingMethod/GeneticAlgorithm.java</file>
         </group>
     </open-files>
 </project-private>

@@ -37,7 +37,7 @@ public final class MatrixNeuralNet extends NetworkInterface {
     private TrainingMethodInterface trainingMethodInterface;
 
     // initialize the RBF
-    public MatrixNeuralNet(double[] input, double[] targetOutput, int[] hiddenLayers, double upperBoundInitializationWeight, 
+    public MatrixNeuralNet(double[][] input, double[][] targetOutput, int[] hiddenLayers, double upperBoundInitializationWeight, 
             double upperBoundInitializationBias, double eta, double momentumParameter, int inEpochLimit, 
             AbstractFunction inActivationFunctionInterface,
             TrainingMethodInterface inTrainingMethodInterface) {

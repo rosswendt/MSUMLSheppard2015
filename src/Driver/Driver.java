@@ -20,6 +20,13 @@ import NeuralNet.TrainingMethod.*;
  * TODO: Add in Angus's updates
  */
 public class Driver {   
+    
+    /* Evolutionary Computation tunable Params 
+    
+    
+    */
+    
+    public static double beta = .03;
         
     /*RBF TUNABLE PARAMS:
     
@@ -45,9 +52,24 @@ public class Driver {
 
     public static double xValLowerBound = 0;
     public static double xValUpperBound = 2;
-    public static int dataSetSize = 2; // make sure this number is divisible by k
-    public static int dimension = 1; 
+    public static int dataSetSize = 100; // make sure this number is divisible by k
+    public static int dimension = 5; 
     
+    
+        /*
+    NEURAL NET TUNABLE PARAMS:
+    
+    Tunable parameters for the Neural Net are as follows:
+    */
+
+    public static double eta = 0.3;
+    public static double upperBoundWeight = 1.0; //what does this do?
+    public static double upperBoundBiasWeight = 1.0; //what does this do?
+    public static double momentumParameter = .1; 
+    public static int[] hiddenLayers = {100, 100}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
+    public static int epochLimit = 1000;   
+
+
     /*
     IN/OUT VALUE SELECTION
     
@@ -58,25 +80,11 @@ public class Driver {
     */
     
     static AbstractFunction activationFunction = new HyperbolicTangent();
-    static TrainingMethodInterface trainingMethod = new BackPropagation();
+    static TrainingMethodInterface trainingMethod = new DifferentialEvolution();
     static GenerateInputValsInterface input = new Regression(dataSetSize, dimension, xValLowerBound, xValUpperBound);
     static AbstractGenerateOutputVals output = new TestFunction();
 
     
-    /*
-    NEURAL NET TUNABLE PARAMS:
-    
-    Tunable parameters for the Neural Net are as follows:
-    */
-
-    public static double eta = 0.3;
-    public static double upperBoundWeight = 1.0; //what does this do?
-    public static double upperBoundBiasWeight = 1.0; //what does this do?
-    public static double momentumParameter = .1; 
-    public static int[] hiddenLayers = {50}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
-    public static int epochLimit = 1000;   
-
-
     /*
     K FOLDS CROSS VALIDATION:
     
@@ -101,7 +109,7 @@ public class Driver {
      * 
      */
                     
-    NetworkInterface netInt = new MatrixNeuralNet(inputLayer, outputLayer, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
+    //NetworkInterface netInt = new MatrixNeuralNet(inputLayer, outputLayer, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
     
     //NetworkInterface netInt = new MatrixNeuralNet(inputLayer, outputLayer, hiddenLayers, eta, upperBoundWeight, upperBoundBiasWeight, momentumParameter, epochLimit, isHiddenLayerZero, activationFunction, trainingMethod);
 
@@ -110,17 +118,19 @@ public class Driver {
     /* Setup below for various params that shouldn't need to be changed      */
     /*************************************************************************/
     
-    public double[][] xDataSet = input.initializeXDataSet();
-    public double[][] yDataSet = output.initializeYDataSet(xDataSet);    
+    public static double[][] xDataSet = input.initializeXDataSet();
+    public static double[][] yDataSet = output.initializeYDataSet(xDataSet);    
     
     //public static boolean isHiddenLayerZero = false;
     public static Matrix meanSquaredError;
     public int meansSquaredErrorDivisor = (k - 1) * (subsets[0].length);       
     public static int[][] subsets = DriverHelper.initializeSubsets(dataSetSize, k);
-    public static double[] inputLayer = new double[dimension];
-    public static double[] outputLayer = {0};
+    public static double[][] inputLayer = xDataSet;
+    public static double[][] outputLayer = yDataSet;
     public Matrix meanSquaredErrorTraining;
-    public Matrix meanSquaredErrorTesting;
+    public Matrix meanSquaredErrorTesting;            
+    public static MatrixNeuralNet nNet = new MatrixNeuralNet(xDataSet, yDataSet, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
+    public static NeuralNetDriver nNetHelper = new NeuralNetDriver(nNet);
     
 
 
@@ -142,15 +152,17 @@ public class Driver {
             
             */
             
-            MatrixNeuralNet nNet = new MatrixNeuralNet(inputLayer, outputLayer, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
-            NeuralNetDriver nNetHelper = new NeuralNetDriver(nNet);
+
             nNetHelper.runTest(runWithOutput);
             break; //gets us out of the loop
         }
     }
-    
-    
-    public void runNeuralnet(){};
-    
-    public void runRBFNet(){};
+        
+public static MatrixNeuralNet getNeuralNet() {
+        return nNet;
+    }
+
+public static int getDimension() {
+    return dimension;
+}
 }
