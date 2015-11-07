@@ -65,7 +65,7 @@ public class Driver {
     public static double eta = 0.0001;
     public static double upperBoundWeight = 1.0; //what does this do?
     public static double upperBoundBiasWeight = 1.0; //what does this do?
-    public static double momentumParameter = .1; 
+    public static double momentumParameter = .001; 
     public static int[] hiddenLayers = {100, 100}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
     public static int epochLimit = 10;   
 

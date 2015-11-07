@@ -15,7 +15,7 @@ public class BackPropagation implements TrainingMethodInterface {
     public void applyMethod() {
         
         
-        neuralNet.deltaZMatrices[neuralNet.deltaZMatrices.length - 1] = MatrixOperations.transpose(MatrixOperations.subtractMatrices(neuralNet.targetOutput, neuralNet.output));
+        neuralNet.deltaZMatrices[neuralNet.deltaZMatrices.length - 1] = MatrixOperations.transpose(MatrixOperations.subtractMatrices(neuralNet.output, neuralNet.targetOutput));
         for (int i = neuralNet.deltaZMatrices.length - 2; i > -1; i--) {
             neuralNet.deltaZMatrices[i] = MatrixOperations.hadamardProduct(neuralNet.FMatrices[i], MatrixOperations.multiplyMatrixes(neuralNet.weightMatrices[i + 1], neuralNet.deltaZMatrices[i + 1]));
         }
