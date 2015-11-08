@@ -26,7 +26,9 @@ public class Driver {
     
     */
     
-    public static double beta = .03;
+    public static double beta = 1;
+    //public static int populationSize = 50; //must be less than dataSetSize
+    public static double crossoverRate = .5;
         
     /*RBF TUNABLE PARAMS:
     
@@ -50,24 +52,24 @@ public class Driver {
     Changes these values to affect the regression parameters;
     */
 
-    public static double xValLowerBound = 0;
+    public static double xValLowerBound = -2;
     public static double xValUpperBound = 2;
-    public static int dataSetSize = 100; // make sure this number is divisible by k
+    public static int dataSetSize = 50; // make sure this number is divisible by k
     public static int dimension = 5; 
     
     
         /*
     NEURAL NET TUNABLE PARAMS:
     
-    Tunable parameters for the Neural Net are as follows:
+    Tunable parameters for the Neural Net with backprop are as follows:
     */
 
-    public static double eta = 0.0001;
+    public static double eta = .001;
     public static double upperBoundWeight = 1.0; //what does this do?
     public static double upperBoundBiasWeight = 1.0; //what does this do?
-    public static double momentumParameter = .001; 
-    public static int[] hiddenLayers = {100, 100}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
-    public static int epochLimit = 1000;   
+    public static double momentumParameter = .15; 
+    public static int[] hiddenLayers = {100,100}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
+    public static int epochLimit = 100;   
 
 
     /*
@@ -79,10 +81,10 @@ public class Driver {
     here too.
     */
     
-    static AbstractFunction activationFunction = new Sigmoid();
+    static AbstractFunction activationFunction = new HyperbolicTangent();
     static TrainingMethodInterface trainingMethod = new BackPropagation();
     static GenerateInputValsInterface input = new Regression(dataSetSize, dimension, xValLowerBound, xValUpperBound);
-    static AbstractGenerateOutputVals output = new TestFunction();
+    static AbstractGenerateOutputVals output = new Rosenbrock();
 
     
     /*
@@ -90,8 +92,8 @@ public class Driver {
     
     k sets the number of folds for k-fold cross validation.
     */
-
-    public static int k = 1; // number of folds
+    public static int repetitions = 2;
+    public static int k = 5; // number of folds
 
 
     /*
@@ -133,30 +135,35 @@ public class Driver {
     public static MatrixNeuralNet nNet = new MatrixNeuralNet(inputLayer, targetOutput, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
     public static NeuralNetDriver nNetHelper = new NeuralNetDriver(nNet);
     
+    
+    /*
+    
+    MatrixNeuralNet parameters order:
+
+    double[] input, double[] targetOutput, int[] hiddenLayers, double upperBoundInitializationWeight, 
+    double upperBoundInitializationBias, double eta, double momentumParameter, int inEpochLimit, 
+    AbstractFunction inActivationFunctionInterface,
+    TrainingMethodInterface inTrainingMethodInterface
+
+    */
+    
 
 
     
     public static void main(String[] args) {
-        
-        while (true) { //this lets us break if DataSet size is not divisible by K
-            if (dataSetSize % k != 0 ) {
-                System.out.println("!!!!ERROR: Dataset size is NOT divisble by k!!!!");
-                break;
-            }
-            
-            /*
-            
-            double[] input, double[] targetOutput, int[] hiddenLayers, double upperBoundInitializationWeight, 
-            double upperBoundInitializationBias, double eta, double momentumParameter, int inEpochLimit, 
-            AbstractFunction inActivationFunctionInterface,
-            TrainingMethodInterface inTrainingMethodInterface
-            
-            */
-            
-
-            nNetHelper.runTest(runWithOutput);
-            break; //gets us out of the loop
+            while (true) { //this lets us break if DataSet size is not divisible by K
+                if (dataSetSize % k != 0 ) {
+                    System.out.println("!!!!ERROR: Dataset size is NOT divisble by k!!!!");
+                    break;
+                }
+                //if (dataSetSize % populationSize != 0 ) {
+                //    System.out.println("ERROR POP SIZE AND DATASET SIZE INCOMPATIBLE");
+                //    break;
+                //}
+                nNetHelper.runTest(runWithOutput);
+                break; //gets us out of the loop
         }
+
     }
         
 public static MatrixNeuralNet getNeuralNet() {

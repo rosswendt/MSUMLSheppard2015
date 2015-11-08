@@ -3,8 +3,6 @@ package NeuralNet;
 import Driver.Driver;
 import Math.Matrix;
 import Math.MatrixOperations;
-import NeuralNet.MatrixNeuralNet;
-import NeuralNet.TrainingMethod.TrainingMethodInterface;
 
 /**
  *

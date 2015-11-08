@@ -50,7 +50,7 @@ public final class MatrixNeuralNet extends NetworkInterface {
         trainingMethodInterface = inTrainingMethodInterface;
         epochLimit = inEpochLimit;
         
-        this.input = new Matrix(input);
+        this.input = new Matrix (input);
         this.output = new Matrix(new double[targetOutput.length]);
         this.targetOutput = MatrixOperations.transpose(new Matrix(Driver.yDataSet));
 
