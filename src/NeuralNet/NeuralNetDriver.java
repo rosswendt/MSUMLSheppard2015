@@ -54,7 +54,7 @@ public class NeuralNetDriver {
                     //neuralNet.setTargetOutputMatrix(D.yDataSet[D.subsets[testCounter][i]]);
                     neuralNet.forwardPropagation();
                     Driver.meanSquaredErrorTesting = MatrixOperations.addMatrices(Driver.meanSquaredErrorTesting, neuralNet.getError());
-                    neuralNet.getTrainingMethodInterface().applyMethod();
+                    //neuralNet.getTrainingMethodInterface().applyMethod();
                 }
             }
             System.out.println("MeanSquaredError for training:" + ((Driver.meanSquaredErrorTraining.getMatrixValues()[0][0]) / (Driver.meansSquaredErrorDivisor * Driver.k)));

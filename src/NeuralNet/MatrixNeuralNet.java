@@ -162,8 +162,16 @@ public final class MatrixNeuralNet extends NetworkInterface {
     public Matrix getError() {
 
         Matrix errorPartOne = MatrixOperations.subtractMatrices(targetOutput, output);
+        
+        Matrix squareError = new Matrix(errorPartOne.getArray());
+        
+        for (int i = 0; i < errorPartOne.getRows(); i++ ) {
+            for (int j = 0; j < errorPartOne.getColumns(); j++ ) {
+                squareError.getArray()[i][j] = squareError.getArray()[i][j]*squareError.getArray()[i][j];
+            }
+        }
 
-        Matrix squareError = MatrixOperations.multiplyMatrixes(errorPartOne, errorPartOne);
+        //squareError = MatrixOperations.multiplyMatrixes(errorPartOne, errorPartOne);
         
         Matrix errorMatrix = MatrixOperations.scalarMultiply(0.5,squareError);
 

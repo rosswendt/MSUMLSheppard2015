@@ -26,9 +26,11 @@ public class Driver {
     
     */
     
-    public static double beta = 1;
+    public static double beta = .45;
+    public static double time = 1000;
+    public static double amplify = 100;
     //public static int populationSize = 50; //must be less than dataSetSize
-    public static double crossoverRate = .5;
+    public static double crossoverRate = .3;
         
     /*RBF TUNABLE PARAMS:
     
@@ -82,9 +84,9 @@ public class Driver {
     */
     
     static AbstractFunction activationFunction = new HyperbolicTangent();
-    static TrainingMethodInterface trainingMethod = new BackPropagation();
+    static TrainingMethodInterface trainingMethod = new DifferentialEvolution();
     static GenerateInputValsInterface input = new Regression(dataSetSize, dimension, xValLowerBound, xValUpperBound);
-    static AbstractGenerateOutputVals output = new Rosenbrock();
+    static AbstractGenerateOutputVals output = new TestFunction();
 
     
     /*

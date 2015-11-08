@@ -91,6 +91,22 @@ public class MatrixOperations {
     }
     
     public static Matrix multiplyMatrixes(Matrix a, Matrix b){
+        if (a.getRows() != b.getRows() || a.getColumns() != b.getColumns()) {
+            //System.out.println("fuck");
+        }
+        double[][] zeroMatrix = new double[a.getRows()][b.getColumns()];
+        Matrix resultMatrix = new Matrix(zeroMatrix);
+        for (int i = 0; i < resultMatrix.getRows(); i++ ) {
+            for (int j = 0; j < resultMatrix.getColumns(); j++ ) {
+                for (int k = 0; k < a.getColumns(); k++ ) {
+                    resultMatrix.getArray()[i][j] += (a.getArray()[i][k] * b.getArray()[k][j] ) ;
+                }
+            }
+        }
+        return resultMatrix;
+    }
+    
+    /*public static Matrix multiplyMatrixes(Matrix a, Matrix b){
         double[][] zeroMatrix = new double[a.getRows()][b.getColumns()];
         Matrix resultMatrix = new Matrix(zeroMatrix);
         for(int j = 0; j < b.getColumns(); j++){
@@ -103,7 +119,7 @@ public class MatrixOperations {
             }
         }
         return resultMatrix;
-    }
+    }*/
     
     public static Matrix hadamardProduct(Matrix a, Matrix b){
         double[][] zeroMatrix = new double[a.getRows()][b.getColumns()];
