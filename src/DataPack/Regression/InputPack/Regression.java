@@ -19,7 +19,6 @@ public class Regression implements GenerateInputValsInterface{
         n = inN;
         lowerBound = inLowerbound;
         upperBound = inUpperbound;
-        
     }
     
     @Override

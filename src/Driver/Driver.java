@@ -20,6 +20,17 @@ import NeuralNet.TrainingMethod.*;
  * TODO: Add in Angus's updates
  */
 public class Driver {   
+    
+    /* Evolutionary Computation tunable Params 
+    
+    
+    */
+    public static int epochLimit = 10000;   
+    public static double beta = .45;
+    public static double time = 1000;
+    public static double amplify = 100;
+    //public static int populationSize = 50; //must be less than dataSetSize
+    public static double crossoverRate = .3;
         
     /*RBF TUNABLE PARAMS:
     
@@ -43,11 +54,25 @@ public class Driver {
     Changes these values to affect the regression parameters;
     */
 
-    public static double xValLowerBound = 0;
-    public static double xValUpperBound = 500;
+    public static double xValLowerBound = -.1;
+    public static double xValUpperBound = 0;
     public static int dataSetSize = 100; // make sure this number is divisible by k
-    public static int dimension = 1; 
+    public static int dimension = 10; 
     
+    
+        /*
+    NEURAL NET TUNABLE PARAMS:
+    
+    Tunable parameters for the Neural Net with backprop are as follows:
+    */
+
+    public static double eta = .001;
+    public static double upperBoundWeight = 1.0; //what does this do?
+    public static double upperBoundBiasWeight = 1.0; //what does this do?
+    public static double momentumParameter = .001; 
+    public static int[] hiddenLayers = {100,100}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
+
+
     /*
     IN/OUT VALUE SELECTION
     
@@ -60,30 +85,16 @@ public class Driver {
     static AbstractFunction activationFunction = new HyperbolicTangent();
     static TrainingMethodInterface trainingMethod = new BackPropagation();
     static GenerateInputValsInterface input = new Regression(dataSetSize, dimension, xValLowerBound, xValUpperBound);
-    static AbstractGenerateOutputVals output = new TestFunction();
+    static AbstractGenerateOutputVals output = new Rosenbrock();
 
     
-    /*
-    NEURAL NET TUNABLE PARAMS:
-    
-    Tunable parameters for the Neural Net are as follows:
-    */
-
-    public static double eta = 0.3;
-    public static double upperBoundWeight = 1.0; //what does this do?
-    public static double upperBoundBiasWeight = 1.0; //what does this do?
-    public static double momentumParameter = .1; 
-    public static int[] hiddenLayers = {50}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
-    public static int epochLimit = 1000;   
-
-
     /*
     K FOLDS CROSS VALIDATION:
     
     k sets the number of folds for k-fold cross validation.
     */
-
-    public static int k = 5; // number of folds
+    public static int repetitions = 2;
+    public static int k = 10; // number of folds
 
 
     /*
@@ -101,7 +112,7 @@ public class Driver {
      * 
      */
                     
-    NetworkInterface netInt = new MatrixNeuralNet(inputLayer, outputLayer, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
+    //NetworkInterface netInt = new MatrixNeuralNet(inputLayer, outputLayer, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
     
     //NetworkInterface netInt = new MatrixNeuralNet(inputLayer, outputLayer, hiddenLayers, eta, upperBoundWeight, upperBoundBiasWeight, momentumParameter, epochLimit, isHiddenLayerZero, activationFunction, trainingMethod);
 
@@ -110,47 +121,57 @@ public class Driver {
     /* Setup below for various params that shouldn't need to be changed      */
     /*************************************************************************/
     
-    public double[][] xDataSet = input.initializeXDataSet();
-    public double[][] yDataSet = output.initializeYDataSet(xDataSet);    
+    public static double[][] xDataSet = input.initializeXDataSet();
+    public static double[][] yDataSet = output.initializeYDataSet(xDataSet);    
     
     //public static boolean isHiddenLayerZero = false;
-    public static Matrix meanSquaredError;
-    public int meansSquaredErrorDivisor = (k - 1) * (subsets[0].length);       
+    public static Matrix meanSquaredError;     
     public static int[][] subsets = DriverHelper.initializeSubsets(dataSetSize, k);
-    public static double[] inputLayer = new double[dimension];
-    public static double[] outputLayer = {0};
-    public Matrix meanSquaredErrorTraining;
-    public Matrix meanSquaredErrorTesting;
+    public static int meansSquaredErrorDivisor = (k - 1) * (subsets[0].length);  
+    public static double[][] inputLayer = xDataSet;
+    public static double[][] outputLayer = yDataSet;
+    public static double[][] targetOutput = yDataSet;
+    public static Matrix meanSquaredErrorTraining;
+    public static Matrix meanSquaredErrorTesting;            
+    public static MatrixNeuralNet nNet = new MatrixNeuralNet(inputLayer, targetOutput, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
+    public static NeuralNetDriver nNetHelper = new NeuralNetDriver(nNet);
+    
+    
+    /*
+    
+    MatrixNeuralNet parameters order:
+
+    double[] input, double[] targetOutput, int[] hiddenLayers, double upperBoundInitializationWeight, 
+    double upperBoundInitializationBias, double eta, double momentumParameter, int inEpochLimit, 
+    AbstractFunction inActivationFunctionInterface,
+    TrainingMethodInterface inTrainingMethodInterface
+
+    */
     
 
 
     
     public static void main(String[] args) {
-        
-        while (true) { //this lets us break if DataSet size is not divisible by K
-            if (dataSetSize % k != 0 ) {
-                System.out.println("!!!!ERROR: Dataset size is NOT divisble by k!!!!");
-                break;
-            }
-            
-            /*
-            
-            double[] input, double[] targetOutput, int[] hiddenLayers, double upperBoundInitializationWeight, 
-            double upperBoundInitializationBias, double eta, double momentumParameter, int inEpochLimit, 
-            AbstractFunction inActivationFunctionInterface,
-            TrainingMethodInterface inTrainingMethodInterface
-            
-            */
-            
-            MatrixNeuralNet nNet = new MatrixNeuralNet(inputLayer, outputLayer, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
-            NeuralNetDriver nNetHelper = new NeuralNetDriver(nNet);
-            nNetHelper.runTest(runWithOutput);
-            break; //gets us out of the loop
+            while (true) { //this lets us break if DataSet size is not divisible by K
+                if (dataSetSize % k != 0 ) {
+                    System.out.println("!!!!ERROR: Dataset size is NOT divisble by k!!!!");
+                    break;
+                }
+                //if (dataSetSize % populationSize != 0 ) {
+                //    System.out.println("ERROR POP SIZE AND DATASET SIZE INCOMPATIBLE");
+                //    break;
+                //}
+                nNetHelper.runNeuralNet(); //initializes and runs NNET with x-validate
+                break; //gets us out of the loop
         }
+
     }
-    
-    
-    public void runNeuralnet(){};
-    
-    public void runRBFNet(){};
+        
+public static MatrixNeuralNet getNeuralNet() {
+        return nNet;
+    }
+
+public static int getDimension() {
+    return dimension;
+}
 }

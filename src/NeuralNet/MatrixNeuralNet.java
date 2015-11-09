@@ -4,6 +4,8 @@ import Math.ActivationFunctions.AbstractFunction;
 import Math.Matrix;
 import Math.MatrixOperations;
 import NeuralNet.TrainingMethod.TrainingMethodInterface;
+import Driver.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -37,7 +39,7 @@ public final class MatrixNeuralNet extends NetworkInterface {
     private TrainingMethodInterface trainingMethodInterface;
 
     // initialize the RBF
-    public MatrixNeuralNet(double[] input, double[] targetOutput, int[] hiddenLayers, double upperBoundInitializationWeight, 
+    public MatrixNeuralNet(double[][] input, double[][] targetOutput, int[] hiddenLayers, double upperBoundInitializationWeight, 
             double upperBoundInitializationBias, double eta, double momentumParameter, int inEpochLimit, 
             AbstractFunction inActivationFunctionInterface,
             TrainingMethodInterface inTrainingMethodInterface) {
@@ -49,9 +51,9 @@ public final class MatrixNeuralNet extends NetworkInterface {
         trainingMethodInterface = inTrainingMethodInterface;
         epochLimit = inEpochLimit;
         
-        this.input = new Matrix(input);
+        this.input = new Matrix (input);
         this.output = new Matrix(new double[targetOutput.length]);
-        this.targetOutput = new Matrix(targetOutput);
+        this.targetOutput = MatrixOperations.transpose(new Matrix(Driver.yDataSet));
 
         isHiddenLayerCountZero = (hiddenLayers.length == 0);
 
@@ -113,21 +115,23 @@ public final class MatrixNeuralNet extends NetworkInterface {
     // Z(i) = f(S(i)) where f(x) is the gaussian function
     // S(i) = W(i) * Z(i - 1)
     // F(i) = (f'(S(i)))^T
-    @Override
-    public void forwardPropagation() {
-        if (isHiddenLayerCountZero) {
-            output = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(input, weightMatrices[0]), biasMatrices[0]);
-        } else {
-            sMatrices[0] = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(input, weightMatrices[0]), biasMatrices[0]);
-            zMatrices[0] = functionInterface.apply(sMatrices[0]);
-            FMatrices[0] = MatrixOperations.transpose(functionInterface.applyDerivative(sMatrices[0]));
-            for (int i = 1; i < sMatrices.length; i++) {
-                sMatrices[i] = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(zMatrices[i - 1], weightMatrices[i]), biasMatrices[i]);
-                zMatrices[i] = functionInterface.apply(sMatrices[i]);
-                FMatrices[i] = MatrixOperations.transpose(functionInterface.applyDerivative(sMatrices[i]));
+    
+    public void forwardPropagation(ArrayList<Matrix> TrainData) {
+        for (int q = 0; q < TrainData.size(); q++) {
+            if (isHiddenLayerCountZero) {
+                output = MatrixOperations.addMatrices(MatrixOperations.multiplyTrainMatrixes(TrainData.get(q), weightMatrices[0]), biasMatrices[0]);
+            } else {
+                sMatrices[0] = MatrixOperations.addBiasMatrices(MatrixOperations.multiplyTrainMatrixes(TrainData.get(q), weightMatrices[0]), biasMatrices[0]);
+                zMatrices[0] = functionInterface.apply(sMatrices[0]);
+                FMatrices[0] = MatrixOperations.transpose(functionInterface.applyDerivative(sMatrices[0]));
+                for (int i = 1; i < sMatrices.length; i++) {
+                    sMatrices[i] = MatrixOperations.addBiasMatrices(MatrixOperations.multiplyMatrixes(zMatrices[i - 1], weightMatrices[i]), biasMatrices[i]);
+                    zMatrices[i] = functionInterface.apply(sMatrices[i]);
+                    FMatrices[i] = MatrixOperations.transpose(functionInterface.applyDerivative(sMatrices[i]));
+                }
+                output = MatrixOperations.addBiasMatrices(MatrixOperations.multiplyMatrixes(zMatrices[zMatrices.length - 1],
+                        weightMatrices[weightMatrices.length - 1]), biasMatrices[biasMatrices.length - 1]);
             }
-            output = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(zMatrices[zMatrices.length - 1],
-                    weightMatrices[weightMatrices.length - 1]), biasMatrices[biasMatrices.length - 1]);
         }
     }
 
@@ -141,9 +145,9 @@ public final class MatrixNeuralNet extends NetworkInterface {
         input = new Matrix(inputMatrix);
     }
     
-    public void setOutputMatrix(double[] outputMatrix){
-        targetOutput = new Matrix(outputMatrix);
-    }
+    //public void setOutputMatrix(double[] outputMatrix){
+    //    targetOutput = new Matrix(outputMatrix);
+    //}
     
     public Matrix getInputMatrix() {
         return input;
@@ -153,21 +157,36 @@ public final class MatrixNeuralNet extends NetworkInterface {
         return targetOutput;
     }
     
-    public void setTargetOutputMatrix(double[] targetOutputMatrix){
-        targetOutput = new Matrix(targetOutputMatrix);
-    }
+    //public void setTargetOutputMatrix(double[] targetOutputMatrix){
+    //    targetOutput = new Matrix(targetOutputMatrix);
+    //}
 
     // calculates the error: E = (1 / 2) * (output - targetOutput)^2
-    public Matrix getError() {
+    public double getError() {
+        
+        double RMSE = 0;
+
         Matrix errorPartOne = MatrixOperations.subtractMatrices(targetOutput, output);
-        //Matrix errorMatrix = errorPartOne;
-        Matrix squareError = MatrixOperations.multiplyMatrixes(errorPartOne, errorPartOne);
+        
+        Matrix squareError = new Matrix(errorPartOne.getArray());
+        
+        for (int i = 0; i < errorPartOne.getRows(); i++ ) {
+            for (int j = 0; j < errorPartOne.getColumns(); j++ ) {
+                squareError.getArray()[i][j] = squareError.getArray()[i][j]*squareError.getArray()[i][j];
+            }
+        }
+
+        //squareError = MatrixOperations.multiplyMatrixes(errorPartOne, errorPartOne);
         
         Matrix errorMatrix = MatrixOperations.scalarMultiply(0.5,squareError);
         
-        //Matrix errorMatrix = MatrixOperations.scalarMultiply(0.5, MatrixOperations.multiplyMatrixes(MatrixOperations.subtractMatrices(output, targetOutput), 
-        //       MatrixOperations.subtractMatrices(output, targetOutput)));
-        return errorMatrix;
+        for (int i = 0; i < errorMatrix.getArray()[0].length; i++ ) {
+            RMSE += errorMatrix.getArray()[0][i];
+        }
+        
+        RMSE = RMSE / errorMatrix.getArray()[0].length;
+
+        return RMSE;
     }
 
         
