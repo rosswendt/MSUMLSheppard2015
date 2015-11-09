@@ -15,7 +15,7 @@ public class BackPropagation implements TrainingMethodInterface {
     public void applyMethod() {
         
         
-        neuralNet.deltaZMatrices[neuralNet.deltaZMatrices.length - 1] = MatrixOperations.transpose(MatrixOperations.subtractMatrices(neuralNet.output, neuralNet.targetOutput));
+        neuralNet.deltaZMatrices[neuralNet.deltaZMatrices.length - 1] = MatrixOperations.transpose(MatrixOperations.specialSubtractMatrices(neuralNet.output, neuralNet.targetOutput));
         for (int i = neuralNet.deltaZMatrices.length - 2; i > -1; i--) {
             neuralNet.deltaZMatrices[i] = MatrixOperations.hadamardProduct(neuralNet.FMatrices[i], MatrixOperations.multiplyMatrixes(neuralNet.weightMatrices[i + 1], neuralNet.deltaZMatrices[i + 1]));
         }
@@ -40,10 +40,10 @@ public class BackPropagation implements TrainingMethodInterface {
         for (int i = 0; i < neuralNet.biasMatrices.length; i++) {
             deltaBiasUpdate = MatrixOperations.scalarMultiply(-1, MatrixOperations.scalarMultiply(neuralNet.eta,
                     MatrixOperations.transpose(neuralNet.deltaZMatrices[i])));
-            deltaBiasUpdate = MatrixOperations.addMatrices(deltaBiasUpdate, MatrixOperations.
+            deltaBiasUpdate = MatrixOperations.addBiasMatrices(deltaBiasUpdate, MatrixOperations.
                     scalarMultiply(neuralNet.momentumParameter, neuralNet.lastBiasUpdates[i]));
             neuralNet.lastBiasUpdates[i] = deltaBiasUpdate;
-            neuralNet.biasMatrices[i] = MatrixOperations.addMatrices(neuralNet.biasMatrices[i], deltaBiasUpdate);
+            neuralNet.biasMatrices[i] = MatrixOperations.addBiasMatrices(deltaBiasUpdate, neuralNet.biasMatrices[i]);
         }
     }
     

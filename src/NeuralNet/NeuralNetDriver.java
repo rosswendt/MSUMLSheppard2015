@@ -105,23 +105,36 @@ public class NeuralNetDriver {
     public void runNeuralNet() {
         TrainingMethodInterface T = neuralNet.getTrainingMethodInterface();
         for (int epoch = 0; epoch < Driver.epochLimit; epoch++) {
-            ArrayList<Matrix> A = partitionData();    
+            System.out.println("Epoch " + epoch + ":");
+            ArrayList<Matrix> train = partitionData();    
+            ArrayList<Matrix> test = new ArrayList<>();
             for (int k = 0; k < Driver.k; k++ ) {
-                Matrix temp = A.get(k);
-                A.remove(temp);
+                Matrix temp = train.get(k);
+                
+                train.remove(temp);
+                test.add(temp);
                 
                 
-                
-                neuralNet.forwardPropagation(A);
+                neuralNet.forwardPropagation(train);
                 T.applyMethod(); //runs training algorithm
-                getNumberWrong();
+                getError(temp);
                 
-                A.add(temp);
+                train.add(temp);
+                test.remove(temp);
             }
         }
     }
 
-    private void getNumberWrong() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void getError(Matrix test) {
+        ArrayList<Matrix> holder = new ArrayList<>();
+        holder.add(test);
+        neuralNet.forwardPropagation(holder);
+        
+        
+        System.out.println(neuralNet.getError());
+        
+        
+        
+        holder.remove(test);
     }
 }

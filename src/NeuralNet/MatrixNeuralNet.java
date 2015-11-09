@@ -117,7 +117,7 @@ public final class MatrixNeuralNet extends NetworkInterface {
     // F(i) = (f'(S(i)))^T
     
     public void forwardPropagation(ArrayList<Matrix> TrainData) {
-        for (int q = 0; q < Driver.k -1; q++) {
+        for (int q = 0; q < TrainData.size(); q++) {
             if (isHiddenLayerCountZero) {
                 output = MatrixOperations.addMatrices(MatrixOperations.multiplyTrainMatrixes(TrainData.get(q), weightMatrices[0]), biasMatrices[0]);
             } else {
@@ -162,7 +162,9 @@ public final class MatrixNeuralNet extends NetworkInterface {
     //}
 
     // calculates the error: E = (1 / 2) * (output - targetOutput)^2
-    public Matrix getError() {
+    public double getError() {
+        
+        double RMSE = 0;
 
         Matrix errorPartOne = MatrixOperations.subtractMatrices(targetOutput, output);
         
@@ -177,8 +179,14 @@ public final class MatrixNeuralNet extends NetworkInterface {
         //squareError = MatrixOperations.multiplyMatrixes(errorPartOne, errorPartOne);
         
         Matrix errorMatrix = MatrixOperations.scalarMultiply(0.5,squareError);
+        
+        for (int i = 0; i < errorMatrix.getArray()[0].length; i++ ) {
+            RMSE += errorMatrix.getArray()[0][i];
+        }
+        
+        RMSE = RMSE / errorMatrix.getArray()[0].length;
 
-        return errorMatrix;
+        return RMSE;
     }
 
         

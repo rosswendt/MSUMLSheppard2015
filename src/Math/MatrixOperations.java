@@ -165,4 +165,24 @@ public class MatrixOperations {
         //}
         return resultMatrix;
     }
+
+    public static Matrix specialSubtractMatrices(Matrix a, Matrix bias) {
+        double[][] zeroMatrix = new double[a.getRows()][a.getColumns()];
+        Matrix resultMatrix = new Matrix(zeroMatrix);
+        
+        for (int i = 0; i < bias.getColumns(); i++ ) {
+            for (int j = 0; j < a.getRows(); j++ ) {
+                for (int k = 0; k < a.getColumns(); k++ ) {
+                    resultMatrix.getArray()[j][k] = a.getArray()[j][k] - bias.getArray()[0][i];
+                }
+            }
+        }
+        
+        //for(int i = 0; i < resultMatrix.getRows(); i++){
+        //    for(int j = 0; j < resultMatrix.getColumns(); j++){
+        //        resultMatrix.getArray()[i][j] = a.getArray()[i][j] + bias.getArray()[i][j];
+        //    }
+        //}
+        return resultMatrix;
+    }
 }
