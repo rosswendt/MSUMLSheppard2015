@@ -162,7 +162,7 @@ public class Driver {
                 //    System.out.println("ERROR POP SIZE AND DATASET SIZE INCOMPATIBLE");
                 //    break;
                 //}
-                nNetHelper.runTest(runWithOutput);
+                nNetHelper.runNeuralNet(); //initializes and runs NNET with x-validate
                 break; //gets us out of the loop
         }
 

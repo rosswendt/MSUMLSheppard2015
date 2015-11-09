@@ -5,6 +5,7 @@ import Math.Matrix;
 import Math.MatrixOperations;
 import NeuralNet.TrainingMethod.TrainingMethodInterface;
 import Driver.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -114,21 +115,23 @@ public final class MatrixNeuralNet extends NetworkInterface {
     // Z(i) = f(S(i)) where f(x) is the gaussian function
     // S(i) = W(i) * Z(i - 1)
     // F(i) = (f'(S(i)))^T
-    @Override
-    public void forwardPropagation() {
-        if (isHiddenLayerCountZero) {
-            output = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(input, weightMatrices[0]), biasMatrices[0]);
-        } else {
-            sMatrices[0] = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(input, weightMatrices[0]), biasMatrices[0]);
-            zMatrices[0] = functionInterface.apply(sMatrices[0]);
-            FMatrices[0] = MatrixOperations.transpose(functionInterface.applyDerivative(sMatrices[0]));
-            for (int i = 1; i < sMatrices.length; i++) {
-                sMatrices[i] = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(zMatrices[i - 1], weightMatrices[i]), biasMatrices[i]);
-                zMatrices[i] = functionInterface.apply(sMatrices[i]);
-                FMatrices[i] = MatrixOperations.transpose(functionInterface.applyDerivative(sMatrices[i]));
+    
+    public void forwardPropagation(ArrayList<Matrix> TrainData) {
+        for (int q = 0; q < Driver.k -1; q++) {
+            if (isHiddenLayerCountZero) {
+                output = MatrixOperations.addMatrices(MatrixOperations.multiplyTrainMatrixes(TrainData.get(q), weightMatrices[0]), biasMatrices[0]);
+            } else {
+                sMatrices[0] = MatrixOperations.addBiasMatrices(MatrixOperations.multiplyTrainMatrixes(TrainData.get(q), weightMatrices[0]), biasMatrices[0]);
+                zMatrices[0] = functionInterface.apply(sMatrices[0]);
+                FMatrices[0] = MatrixOperations.transpose(functionInterface.applyDerivative(sMatrices[0]));
+                for (int i = 1; i < sMatrices.length; i++) {
+                    sMatrices[i] = MatrixOperations.addBiasMatrices(MatrixOperations.multiplyMatrixes(zMatrices[i - 1], weightMatrices[i]), biasMatrices[i]);
+                    zMatrices[i] = functionInterface.apply(sMatrices[i]);
+                    FMatrices[i] = MatrixOperations.transpose(functionInterface.applyDerivative(sMatrices[i]));
+                }
+                output = MatrixOperations.addBiasMatrices(MatrixOperations.multiplyMatrixes(zMatrices[zMatrices.length - 1],
+                        weightMatrices[weightMatrices.length - 1]), biasMatrices[biasMatrices.length - 1]);
             }
-            output = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(zMatrices[zMatrices.length - 1],
-                    weightMatrices[weightMatrices.length - 1]), biasMatrices[biasMatrices.length - 1]);
         }
     }
 

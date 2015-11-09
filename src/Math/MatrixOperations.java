@@ -131,4 +131,38 @@ public class MatrixOperations {
         }
         return resultMatrix;
     }
+
+    public static Matrix multiplyTrainMatrixes(Matrix train, Matrix b){
+        MatrixOperations.transpose(train);
+        double[][] zeroMatrix = new double[b.getRows()][b.getColumns()];
+        Matrix resultMatrix = new Matrix(zeroMatrix);
+        for (int i = 0; i < resultMatrix.getRows(); i++ ) {
+            for (int j = 0; j < resultMatrix.getColumns(); j++ ) {
+                for (int k = 0; k < train.getColumns(); k++ ) {
+                    resultMatrix.getArray()[i][j] += (train.getArray()[i][k] * b.getArray()[k][j] ) ;
+                }
+            }
+        }
+        return resultMatrix;
+    }
+
+    public static Matrix addBiasMatrices(Matrix a, Matrix bias){
+        double[][] zeroMatrix = new double[a.getRows()][a.getColumns()];
+        Matrix resultMatrix = new Matrix(zeroMatrix);
+        
+        for (int i = 0; i < bias.getColumns(); i++ ) {
+            for (int j = 0; j < a.getRows(); j++ ) {
+                for (int k = 0; k < a.getColumns(); k++ ) {
+                    resultMatrix.getArray()[j][k] = a.getArray()[j][k] + bias.getArray()[0][i];
+                }
+            }
+        }
+        
+        //for(int i = 0; i < resultMatrix.getRows(); i++){
+        //    for(int j = 0; j < resultMatrix.getColumns(); j++){
+        //        resultMatrix.getArray()[i][j] = a.getArray()[i][j] + bias.getArray()[i][j];
+        //    }
+        //}
+        return resultMatrix;
+    }
 }
