@@ -25,7 +25,7 @@ public class Driver {
     
     
     */
-    
+    public static int epochLimit = 10000;   
     public static double beta = .45;
     public static double time = 1000;
     public static double amplify = 100;
@@ -54,10 +54,10 @@ public class Driver {
     Changes these values to affect the regression parameters;
     */
 
-    public static double xValLowerBound = -2;
-    public static double xValUpperBound = 2;
-    public static int dataSetSize = 50; // make sure this number is divisible by k
-    public static int dimension = 5; 
+    public static double xValLowerBound = -.1;
+    public static double xValUpperBound = 0;
+    public static int dataSetSize = 100; // make sure this number is divisible by k
+    public static int dimension = 10; 
     
     
         /*
@@ -69,9 +69,8 @@ public class Driver {
     public static double eta = .001;
     public static double upperBoundWeight = 1.0; //what does this do?
     public static double upperBoundBiasWeight = 1.0; //what does this do?
-    public static double momentumParameter = .15; 
+    public static double momentumParameter = .001; 
     public static int[] hiddenLayers = {100,100}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
-    public static int epochLimit = 100;   
 
 
     /*
@@ -86,7 +85,7 @@ public class Driver {
     static AbstractFunction activationFunction = new HyperbolicTangent();
     static TrainingMethodInterface trainingMethod = new BackPropagation();
     static GenerateInputValsInterface input = new Regression(dataSetSize, dimension, xValLowerBound, xValUpperBound);
-    static AbstractGenerateOutputVals output = new TestFunction();
+    static AbstractGenerateOutputVals output = new Rosenbrock();
 
     
     /*
@@ -95,7 +94,7 @@ public class Driver {
     k sets the number of folds for k-fold cross validation.
     */
     public static int repetitions = 2;
-    public static int k = 5; // number of folds
+    public static int k = 10; // number of folds
 
 
     /*

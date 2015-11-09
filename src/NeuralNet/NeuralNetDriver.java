@@ -105,9 +105,12 @@ public class NeuralNetDriver {
     public void runNeuralNet() {
         TrainingMethodInterface T = neuralNet.getTrainingMethodInterface();
         for (int epoch = 0; epoch < Driver.epochLimit; epoch++) {
-            System.out.println("Epoch " + epoch + ":");
+            if (epoch % 20 == 0 ) {
+                System.out.println("Epoch " + epoch + ":");
+            }
             ArrayList<Matrix> train = partitionData();    
             ArrayList<Matrix> test = new ArrayList<>();
+            ArrayList<Double> meanError = new ArrayList<>();
             for (int k = 0; k < Driver.k; k++ ) {
                 Matrix temp = train.get(k);
                 
@@ -117,24 +120,36 @@ public class NeuralNetDriver {
                 
                 neuralNet.forwardPropagation(train);
                 T.applyMethod(); //runs training algorithm
-                getError(temp);
+                meanError.add(getError(temp, k, epoch));
                 
                 train.add(temp);
                 test.remove(temp);
             }
+            double meanSummedError = 0;
+            for (int i = 0; i < meanError.size(); i++ ) {
+                meanSummedError += meanError.get(i);
+            }
+            if (epoch % 20 == 0) {
+                meanSummedError = meanSummedError/Driver.k;
+                System.out.println("Mean error: " + meanSummedError);
+            }
+            
+            meanError.clear();
         }
     }
 
-    private void getError(Matrix test) {
+    private double getError(Matrix test, int k, int epoch) {
         ArrayList<Matrix> holder = new ArrayList<>();
         holder.add(test);
         neuralNet.forwardPropagation(holder);
         
         
-        System.out.println(neuralNet.getError());
+        //System.out.println("Fold #" + k + "RMSE: " + neuralNet.getError());
         
         
         
         holder.remove(test);
+        
+        return neuralNet.getError();
     }
 }
