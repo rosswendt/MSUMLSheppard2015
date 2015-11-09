@@ -44,4 +44,8 @@ public class Matrix {
     public double[][] getMatrixValues(){
         return matrixValues;
     }
+
+    public void setMatrixValues(int index1, int index2, double value) {
+        matrixValues[index1][index2] = value;
+    }
 }

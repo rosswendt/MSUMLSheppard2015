@@ -26,11 +26,11 @@ public class Driver {
     
     */
     public static int epochLimit = 10000;   
-    public static double beta = .45;
+    public static double beta = .8;
     public static double time = 1000;
-    public static double amplify = 100;
+    public static double amplify = 1;
     //public static int populationSize = 50; //must be less than dataSetSize
-    public static double crossoverRate = .3;
+    public static double crossoverRate = 0.5;
         
     /*RBF TUNABLE PARAMS:
     
@@ -54,10 +54,10 @@ public class Driver {
     Changes these values to affect the regression parameters;
     */
 
-    public static double xValLowerBound = -.1;
+    public static double xValLowerBound = -25;
     public static double xValUpperBound = 0;
-    public static int dataSetSize = 100; // make sure this number is divisible by k
-    public static int dimension = 10; 
+    public static int dataSetSize = 200; // make sure this number is divisible by k
+    public static int dimension = 20; 
     
     
         /*
@@ -66,11 +66,11 @@ public class Driver {
     Tunable parameters for the Neural Net with backprop are as follows:
     */
 
-    public static double eta = .001;
+    public static double eta = .3;
     public static double upperBoundWeight = 1.0; //what does this do?
     public static double upperBoundBiasWeight = 1.0; //what does this do?
-    public static double momentumParameter = .001; 
-    public static int[] hiddenLayers = {100,100}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
+    public static double momentumParameter = .1; 
+    public static int[] hiddenLayers = {100}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
 
 
     /*
@@ -83,9 +83,9 @@ public class Driver {
     */
     
     static AbstractFunction activationFunction = new HyperbolicTangent();
-    static TrainingMethodInterface trainingMethod = new BackPropagation();
+    static TrainingMethodInterface trainingMethod = new DifferentialEvolution();
     static GenerateInputValsInterface input = new Regression(dataSetSize, dimension, xValLowerBound, xValUpperBound);
-    static AbstractGenerateOutputVals output = new Rosenbrock();
+    static AbstractGenerateOutputVals output = new TestFunction();
 
     
     /*
