@@ -132,18 +132,19 @@ public class MatrixOperations {
         return resultMatrix;
     }
 
-    public static Matrix multiplyTrainMatrixes(Matrix train, Matrix b){
-        MatrixOperations.transpose(train);
-        double[][] zeroMatrix = new double[b.getRows()][b.getColumns()];
-        Matrix resultMatrix = new Matrix(zeroMatrix);
-        for (int i = 0; i < resultMatrix.getRows(); i++ ) {
-            for (int j = 0; j < resultMatrix.getColumns(); j++ ) {
-                for (int k = 0; k < train.getColumns(); k++ ) {
-                    resultMatrix.getArray()[i][j] += (train.getArray()[i][k] * b.getArray()[k][j] ) ;
+    public static Matrix partialMultiplyMatrices(Matrix a, Matrix weights){
+        //train is a
+        //MatrixOperations.transpose(a);
+        //double[][] zeroMatrix = new double[weights.getRows()][weights.getColumns()];
+        // Matrix resultMatrix = new Matrix(zeroMatrix);
+        for (int i = 0; i < weights.getRows(); i++ ) {
+            for (int j = 0; j < weights.getColumns(); j++ ) {
+                for (int k = 0; k < a.getColumns(); k++ ) {
+                    weights.getArray()[i][j] += (a.getArray()[i][k] * weights.getArray()[k][j] ) ;
                 }
             }
         }
-        return resultMatrix;
+        return weights;
     }
 
     public static Matrix addBiasMatrices(Matrix a, Matrix bias){

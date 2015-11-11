@@ -52,7 +52,7 @@ public final class MatrixNeuralNet extends NetworkInterface {
         epochLimit = inEpochLimit;
         
         this.input = new Matrix (input);
-        this.output = new Matrix(new double[targetOutput.length]);
+        this.output = new Matrix(new double[1]);
         this.targetOutput = MatrixOperations.transpose(new Matrix(Driver.yDataSet));
 
         isHiddenLayerCountZero = (hiddenLayers.length == 0);
@@ -116,12 +116,12 @@ public final class MatrixNeuralNet extends NetworkInterface {
     // S(i) = W(i) * Z(i - 1)
     // F(i) = (f'(S(i)))^T
     
-    public void forwardPropagation(ArrayList<Matrix> TrainData) {
-        for (int q = 0; q < TrainData.size(); q++) {
+    @Override
+    public void forwardPropagation(Matrix Example) {
             if (isHiddenLayerCountZero) {
-                output = MatrixOperations.addMatrices(MatrixOperations.multiplyTrainMatrixes(TrainData.get(q), weightMatrices[0]), biasMatrices[0]);
+                output = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(Example, weightMatrices[0]), biasMatrices[0]);
             } else {
-                sMatrices[0] = MatrixOperations.addBiasMatrices(MatrixOperations.multiplyTrainMatrixes(TrainData.get(q), weightMatrices[0]), biasMatrices[0]);
+                sMatrices[0] = MatrixOperations.addBiasMatrices(MatrixOperations.multiplyMatrixes(Example, weightMatrices[0]), biasMatrices[0]);
                 zMatrices[0] = functionInterface.apply(sMatrices[0]);
                 FMatrices[0] = MatrixOperations.transpose(functionInterface.applyDerivative(sMatrices[0]));
                 for (int i = 1; i < sMatrices.length; i++) {
@@ -132,7 +132,6 @@ public final class MatrixNeuralNet extends NetworkInterface {
                 output = MatrixOperations.addBiasMatrices(MatrixOperations.multiplyMatrixes(zMatrices[zMatrices.length - 1],
                         weightMatrices[weightMatrices.length - 1]), biasMatrices[biasMatrices.length - 1]);
             }
-        }
     }
 
     public Matrix deltaWeight(Matrix deltaMatrix, Matrix zMatrix) {

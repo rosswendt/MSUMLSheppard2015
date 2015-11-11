@@ -6,7 +6,7 @@ import NeuralNet.MatrixNeuralNet;
  *
  * @author Ross Wendt
  */
-public class EvolutionStrategy implements TrainingMethodInterface {
+public class EvolutionStrategy extends TrainingMethodInterface {
 
     @Override
     public void applyMethod() {

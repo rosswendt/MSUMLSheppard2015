@@ -3,16 +3,15 @@ package NeuralNet.TrainingMethod;
 import Driver.Driver;
 import Math.Matrix;
 import Math.MatrixOperations;
-import NeuralNet.MatrixNeuralNet;
+import NeuralNet.NeuralNetDriver;
 import java.util.ArrayList;
 import java.util.Random;
-import java.math.*;
 
 /**
  *
  * @author Ross Wendt
  */
-public class DifferentialEvolution implements TrainingMethodInterface {
+public class DifferentialEvolution extends TrainingMethodInterface {
     ArrayList<Double> A = new ArrayList<>();
     int lengthWeights = Driver.hiddenLayers.length;
     int lengthMatrix = Driver.dataSetSize;    
@@ -36,19 +35,20 @@ public class DifferentialEvolution implements TrainingMethodInterface {
        //for (int t = 0; t < Driver.time; t++)
             for (int i = 0; i < lengthWeights; i++) { // go through each weights layer
                 //System.out.println(i);
-                for (int k = 0; k < Driver.hiddenLayers[i]; k++) { //there are |Driver.dataSetSize| individuals
-
+                for (int k = 0; k < Driver.dimension; k++) { //there are |Driver.dataSetSize| individuals
+                    //System.out.println(Driver.hiddenLayers[i]);
                     //System.out.println(k);
                     double[] example = new double[neuralNet.weightMatrices[0].getRows()];
                     //System.out.println(example.length);
                     //neuralNet.weightMatrices[i] = MatrixOperations.transpose(neuralNet.weightMatrices[i]);
-                    for (int z = 0; z < neuralNet.weightMatrices[0].getRows(); z++ ) {
+                    for (int z = 0; z < neuralNet.weightMatrices[0].getColumns(); z++ ) {
                         //System.out.println(z);
-                        example[z] = neuralNet.weightMatrices[i].getArray()[z][k];
+                        example[z] = neuralNet.weightMatrices[i].getArray()[k][z];
                         //System.out.println(z);
                     }
                     Matrix exampleMatrix = new Matrix(example);                    
                     double examplesEval = evaluate(exampleMatrix, i, k);
+
                     
                     //System.out.println(example);
                     //System.out.println("Example length is " + example.length);
@@ -57,11 +57,16 @@ public class DifferentialEvolution implements TrainingMethodInterface {
 
 
                     double[] mutantVector = createMutant(i, k);
+                    
+                                        
                     //System.out.println("Mutant length :" + mutantVector.length);
                     //System.out.println("Example length :" + example.length);
                     //System.out.println("Mutant length is " + mutantVector.length);
                     double[] crossover = createOffspring(mutantVector, example);
                     Matrix crossoverMatrix = new Matrix(crossover);
+                    
+                    System.out.println(k);
+                    //System.out.println(Driver.dataSetSize);
 
 
 
@@ -81,6 +86,10 @@ public class DifferentialEvolution implements TrainingMethodInterface {
                        // neuralNet.weightMatrices[i].getArray()[k] = crossover;
 
 
+                    } 
+                    
+                    if (candidatesEval == examplesEval ) {
+                        System.out.println(NeuralNetDriver.epoch + " fuck");
                     }
 
                     /*neuralNet.deltaZMatrices[neuralNet.deltaZMatrices.length - 1] = neuralNet.weightMatrices[0];
@@ -95,9 +104,12 @@ public class DifferentialEvolution implements TrainingMethodInterface {
                     */
                     //neuralNet.weightMatrices[i] = MatrixOperations.transpose(neuralNet.weightMatrices[i]);
                 }
-            MatrixOperations.scalarMultiply(neuralNet.momentumParameter, neuralNet.weightMatrices[i]);
-            MatrixOperations.scalarMultiply(neuralNet.eta, neuralNet.weightMatrices[i]);
+            //MatrixOperations.scalarMultiply(neuralNet.momentumParameter, neuralNet.weightMatrices[i]);
+            //MatrixOperations.scalarMultiply(neuralNet.eta, neuralNet.weightMatrices[i]);
         }
+            
+        //updateWeights(neuralNet);
+        //updateBiases(neuralNet);
 
     }
     
@@ -118,7 +130,7 @@ public class DifferentialEvolution implements TrainingMethodInterface {
         error = error / neuralNet.targetOutput.getColumns();
         error = Math.abs(error);
         
-        Math.sqrt(error);
+        error = Math.sqrt(error);
         
         //System.out.println(error);
         
@@ -150,8 +162,111 @@ public class DifferentialEvolution implements TrainingMethodInterface {
         //System.out.println(error);
         return error;
    }
-
+    
     double[] createMutant(int in, int k) {
+        //System.out.println(Driver.dataSetSize);
+        //neuralNet.weightMatrices[in] = MatrixOperations.transpose(neuralNet.weightMatrices[in]);
+        int size = neuralNet.weightMatrices[0].getColumns();
+        int rows = neuralNet.weightMatrices[0].getRows();
+        //System.out.println(size);
+        //ystem.out.println(rows);
+        //int chooseIndex = new Random().nextInt(size);
+        //System.out.println(chooseIndex);
+        //System.out.println(neuralNet.weightMatrices[in].getArray());
+        int q = 0;
+        //if (k < rows - 2) {
+        //    q = k;
+        //} else {
+        //    q = k - 2;
+        //}
+        
+        
+        
+        //
+        double[] choose = new double[neuralNet.weightMatrices[in].getRows()];
+        int vectorIndex = q;
+        for (int i = 0; i < rows; i++ ) {
+            choose[i] = neuralNet.weightMatrices[in].getArray()[i][vectorIndex];
+        }
+        
+        Matrix chosenVector = new Matrix(choose);
+        
+        
+        //Matrix chosenVector = new Matrix(neuralNet.weightMatrices[in].getArray()[chooseIndex]);       
+        
+        //int chooseIndexExampleOne = new Random().nextInt(size); 
+        double[] choose2 = new double[neuralNet.weightMatrices[in].getRows()];
+        int vectorIndex2 = q;
+        for (int i = 0; i < rows; i++ ) {
+            choose2[i] = neuralNet.weightMatrices[in].getArray()[i][vectorIndex2];
+        }
+        
+        //System.out.println(choose2.length);
+        
+        Matrix exampleOne = new Matrix(choose2);
+        
+        
+        
+        double[] choose3 = new double[neuralNet.weightMatrices[in].getRows()];
+        int vectorIndex3 = q ;
+        for (int i = 0; i < choose3.length; i++ ) {
+            choose3[i] = neuralNet.weightMatrices[in].getArray()[i][vectorIndex3];
+        }
+        
+        //System.out.println(choose3.length);
+        
+        /*double[] choose3 = new double[neuralNet.weightMatrices[in].getRows()];
+        vectorIndex = new Random().nextInt(size); 
+        for (int i = 0; i < rows; i++ ) {
+            choose3[i] = neuralNet.weightMatrices[in].getArray()[i][vectorIndex];
+        }*/
+
+        //int chooseIndexExampleTwo = new Random().nextInt(size);
+        Matrix exampleTwo = new Matrix(choose3);
+        
+        
+        
+        
+        /*
+        "reroll" for new values if any pair is equal
+        */
+        /*while( exampleOne.equals(exampleTwo)|| exampleTwo.equals(chosenVector) || chosenVector.equals(exampleOne) ) {
+            int newIndex1 = new Random().nextInt(size);
+            int newIndex2 = new Random().nextInt(size);
+            //System.out.println(Driver.dimension);
+            //System.out.println(newIndex1 + " " + newIndex2);
+            
+            choose2 = new double[neuralNet.weightMatrices[in].getRows()];
+            vectorIndex = new Random().nextInt(size); 
+            for (int i = 0; i < rows; i++ ) {
+                choose2[i] = neuralNet.weightMatrices[in].getArray()[i][vectorIndex];
+            }
+        
+        
+            exampleOne = new Matrix(choose2);
+        
+            choose3 = new double[neuralNet.weightMatrices[in].getRows()];
+            vectorIndex = new Random().nextInt(size); 
+            for (int i = 0; i < rows; i++ ) {
+                choose3[i] = neuralNet.weightMatrices[in].getArray()[i][vectorIndex];
+            }
+            
+            exampleTwo = new Matrix(choose3);
+       
+        } */
+        //neuralNet.weightMatrices[in] = MatrixOperations.transpose(neuralNet.weightMatrices[in]);
+        //create u_i(t)
+        
+        Matrix difference = new Matrix(MatrixOperations.subtractMatrices(exampleOne, exampleTwo).getArray());
+        //difference = MatrixOperations.scalarMultiply(Driver.beta, difference);
+        //difference = MatrixOperations.addMatrices(chosenVector, difference);    
+        
+        //neuralNet.weightMatrices[in] = MatrixOperations.transpose(neuralNet.weightMatrices[in]);
+        
+        return difference.getArray()[0];
+    }
+
+    /*double[] createMutant(int in, int k) {
         //System.out.println(Driver.dataSetSize);
         //neuralNet.weightMatrices[in] = MatrixOperations.transpose(neuralNet.weightMatrices[in]);
         int size = neuralNet.weightMatrices[0].getColumns();
@@ -202,7 +317,7 @@ public class DifferentialEvolution implements TrainingMethodInterface {
         }*/
 
         //int chooseIndexExampleTwo = new Random().nextInt(size);
-        Matrix exampleTwo = new Matrix(choose3);
+        //Matrix exampleTwo = new Matrix(choose3);
         
         
         
@@ -210,7 +325,7 @@ public class DifferentialEvolution implements TrainingMethodInterface {
         /*
         "reroll" for new values if any pair is equal
         */
-        while( exampleOne.equals(exampleTwo)|| exampleTwo.equals(chosenVector) || chosenVector.equals(exampleOne) ) {
+        /*while( exampleOne.equals(exampleTwo)|| exampleTwo.equals(chosenVector) || chosenVector.equals(exampleOne) ) {
             int newIndex1 = new Random().nextInt(size);
             int newIndex2 = new Random().nextInt(size);
             //System.out.println(Driver.dimension);
@@ -244,7 +359,7 @@ public class DifferentialEvolution implements TrainingMethodInterface {
         //neuralNet.weightMatrices[in] = MatrixOperations.transpose(neuralNet.weightMatrices[in]);
         
         return difference.getArray()[0];
-    }
+    }*/
     
     private double[] createOffspring(double[] mutant, double[] example) {
         double[] crossingOver = new double[mutant.length];
@@ -264,9 +379,9 @@ public class DifferentialEvolution implements TrainingMethodInterface {
         return crossingOver;
     }
 
-    private void amplify(double[] crossover) {
-        for (int i = 0; i < crossover.length; i++ ) {
-            crossover[i] *= Driver.amplify;
-        }
-    }
+    //private void amplify(double[] crossover) {
+    //    for (int i = 0; i < crossover.length; i++ ) {
+    //        crossover[i] *= Driver.amplify;
+    //    }
+    //}
 }
