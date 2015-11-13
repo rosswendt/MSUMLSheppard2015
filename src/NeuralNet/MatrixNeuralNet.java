@@ -4,57 +4,57 @@ import Math.ActivationFunctions.AbstractFunction;
 import Math.Matrix;
 import Math.MatrixOperations;
 import NeuralNet.TrainingMethod.TrainingMethodInterface;
-import Driver.*;
 
-/**
- *
- * @author Ross Wendt
- */
 /**
  *
  * @author Angus Tomlinson
  */
 public final class MatrixNeuralNet extends NetworkInterface {
+
     private final double upperBoundInitializationWeight;
     private final double upperBoundInitializationBias;
     public final double eta;
     public final double momentumParameter;
-    
 
-    private boolean isHiddenLayerCountZero;
+    private final boolean isHiddenLayerCountZero;
     public Matrix input;
     public Matrix output;
     public Matrix targetOutput;
     public Matrix[] weightMatrices;
     public Matrix[] biasMatrices;
-    private final Matrix[] sMatrices;
-    public final Matrix[] zMatrices;
-    public final Matrix[] FMatrices;
-    public final Matrix[] deltaZMatrices;
-    public final Matrix[] lastWeightUpdates;
-    public final Matrix[] lastBiasUpdates;
-    
-    private AbstractFunction functionInterface;
-    private TrainingMethodInterface trainingMethodInterface;
+    private Matrix[] sMatrices;
+    public Matrix[] zMatrices;
+    public Matrix[] FMatrices;
+    public Matrix[] deltaZMatrices;
+    public Matrix[] lastWeightUpdates;
+    public Matrix[] lastBiasUpdates;
+    public int hiddenLayersLength;
+
+    private final AbstractFunction functionInterface;
+    private final TrainingMethodInterface trainingMethodInterface;
 
     // initialize the RBF
-    public MatrixNeuralNet(double[][] input, double[][] targetOutput, int[] hiddenLayers, double upperBoundInitializationWeight, 
-            double upperBoundInitializationBias, double eta, double momentumParameter, int inEpochLimit, 
-            AbstractFunction inActivationFunctionInterface,
-            TrainingMethodInterface inTrainingMethodInterface) {
+    public MatrixNeuralNet(double[] input, double[] output, int[] hiddenLayers, double upperBoundInitializationWeight,
+            double upperBoundInitializationBias, double eta, double momentumParameter, int epochLimit,
+            AbstractFunction activationFunctionInterface,
+            TrainingMethodInterface trainingMethodInterface) {
+
         this.eta = eta;
-        this.upperBoundInitializationWeight = upperBoundInitializationWeight;
-        this.upperBoundInitializationBias = upperBoundInitializationBias;
         this.momentumParameter = momentumParameter;
-        functionInterface = inActivationFunctionInterface;
-        trainingMethodInterface = inTrainingMethodInterface;
-        epochLimit = inEpochLimit;
-        
-        this.input = new Matrix (input);
-        this.output = new Matrix(new double[targetOutput.length]);
-        this.targetOutput = MatrixOperations.transpose(new Matrix(Driver.yDataSet));
+
+        functionInterface = activationFunctionInterface;
+        this.trainingMethodInterface = trainingMethodInterface;
+        this.epochLimit = epochLimit;
+
+        this.input = new Matrix(input);
+        this.output = new Matrix(new double[output.length]);
+        this.targetOutput = new Matrix(new double[output.length]);
 
         isHiddenLayerCountZero = (hiddenLayers.length == 0);
+        hiddenLayersLength = hiddenLayers.length;
+
+        this.upperBoundInitializationWeight = upperBoundInitializationWeight;
+        this.upperBoundInitializationBias = upperBoundInitializationBias;
 
         initializeWeights(hiddenLayers);
 
@@ -116,6 +116,11 @@ public final class MatrixNeuralNet extends NetworkInterface {
     // F(i) = (f'(S(i)))^T
     @Override
     public void forwardPropagation() {
+//        sMatrices = new Matrix[hiddenLayersLength];
+//        zMatrices = new Matrix[hiddenLayersLength];
+//        FMatrices = new Matrix[hiddenLayersLength];
+//
+//        deltaZMatrices = new Matrix[hiddenLayersLength + 1];
         if (isHiddenLayerCountZero) {
             output = MatrixOperations.addMatrices(MatrixOperations.multiplyMatrixes(input, weightMatrices[0]), biasMatrices[0]);
         } else {
@@ -137,26 +142,30 @@ public final class MatrixNeuralNet extends NetworkInterface {
                 MatrixOperations.transpose(MatrixOperations.multiplyMatrixes(deltaMatrix, zMatrix))));
         return deltaWeightMatrix;
     }
-    
-    public void setInputMatrix(double[] inputMatrix){
-        input = new Matrix(inputMatrix);
-    }
-    
-    //public void setOutputMatrix(double[] outputMatrix){
-    //    targetOutput = new Matrix(outputMatrix);
-    //}
-    
+
     public Matrix getInputMatrix() {
         return input;
+    }
+
+    public void setInputMatrix(double[] inputMatrix) {
+        input = new Matrix(inputMatrix);
+    }
+
+    public Matrix getOutputMatrix() {
+        return output;
+    }
+
+    public void setOutputMatrix(double[] outputMatrix) {
+        targetOutput = new Matrix(outputMatrix);
     }
 
     public Matrix getTargetOutputMatrix() {
         return targetOutput;
     }
-    
-    //public void setTargetOutputMatrix(double[] targetOutputMatrix){
-    //    targetOutput = new Matrix(targetOutputMatrix);
-    //}
+
+    public void setTargetOutputMatrix(double[] targetOutputMatrix) {
+        targetOutput = new Matrix(targetOutputMatrix);
+    }
 
     // calculates the error: E = (1 / 2) * (output - targetOutput)^2
     public Matrix getError() {
@@ -164,18 +173,13 @@ public final class MatrixNeuralNet extends NetworkInterface {
         Matrix errorPartOne = MatrixOperations.subtractMatrices(targetOutput, output);
 
         Matrix squareError = MatrixOperations.multiplyMatrixes(errorPartOne, errorPartOne);
-        
-        Matrix errorMatrix = MatrixOperations.scalarMultiply(0.5,squareError);
+
+        Matrix errorMatrix = MatrixOperations.scalarMultiply(0.5, squareError);
 
         return errorMatrix;
     }
 
-        
     public TrainingMethodInterface getTrainingMethodInterface() {
         return trainingMethodInterface;
-    }
-    
-    public Matrix getOutputMatrix() {
-        return output;
     }
 }
