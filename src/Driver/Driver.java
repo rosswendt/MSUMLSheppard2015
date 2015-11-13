@@ -20,6 +20,12 @@ import NeuralNet.TrainingMethod.*;
  */
 public class Driver {
 
+    // Evolution strategy parameters:
+    
+    public static double initialSigma = (1.0 / 6.0);
+    public static int mu = 2;
+    public static int lambda = 4;
+
     /* Evolutionary Computation tunable Params 
     
     
@@ -127,7 +133,9 @@ public class Driver {
     public static double[] inputLayer = new double[dimension];
     public static double[] outputLayer = new double[1];
  
-    public static MatrixNeuralNet nNet = new MatrixNeuralNet(inputLayer, outputLayer, hiddenLayers, upperBoundWeight, upperBoundBiasWeight, eta, momentumParameter, epochLimit, activationFunction, trainingMethod);
+    public static MatrixNeuralNet nNet = new MatrixNeuralNet(inputLayer, outputLayer, hiddenLayers, upperBoundWeight, 
+            upperBoundBiasWeight, eta, momentumParameter, initialSigma, mu, lambda, epochLimit, activationFunction, 
+                trainingMethod);
     public static NeuralNetDriver nNetHelper = new NeuralNetDriver(nNet);
 
     public static void main(String[] args) {
