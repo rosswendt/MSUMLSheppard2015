@@ -7,6 +7,10 @@ import NeuralNet.TrainingMethod.TrainingMethodInterface;
 
 /**
  *
+ * @author Ross Wendt
+ */
+/**
+ *
  * @author Angus Tomlinson
  */
 public final class MatrixNeuralNet extends NetworkInterface {
@@ -15,6 +19,10 @@ public final class MatrixNeuralNet extends NetworkInterface {
     private final double upperBoundInitializationBias;
     public final double eta;
     public final double momentumParameter;
+    
+    public final double initialSigma;
+    public final int mu;
+    public final int lambda;
 
     private final boolean isHiddenLayerCountZero;
     public Matrix input;
@@ -35,12 +43,16 @@ public final class MatrixNeuralNet extends NetworkInterface {
 
     // initialize the RBF
     public MatrixNeuralNet(double[] input, double[] output, int[] hiddenLayers, double upperBoundInitializationWeight,
-            double upperBoundInitializationBias, double eta, double momentumParameter, int epochLimit,
-            AbstractFunction activationFunctionInterface,
+            double upperBoundInitializationBias, double eta, double momentumParameter, double initialSigma, int mu, 
+            int lambda, int epochLimit, AbstractFunction activationFunctionInterface,
             TrainingMethodInterface trainingMethodInterface) {
 
         this.eta = eta;
         this.momentumParameter = momentumParameter;
+        
+        this.initialSigma = initialSigma;
+        this.mu = mu;
+        this.lambda = lambda;
 
         functionInterface = activationFunctionInterface;
         this.trainingMethodInterface = trainingMethodInterface;
@@ -167,6 +179,22 @@ public final class MatrixNeuralNet extends NetworkInterface {
         targetOutput = new Matrix(targetOutputMatrix);
     }
 
+    public double getInitialSigma(){
+        return initialSigma;
+    }
+    
+    public int getMu(){
+        return mu;
+    }
+    
+    public int getLambda(){
+        return lambda;
+    }
+    
+    public double getUpperBound(){
+        return upperBoundInitializationWeight;
+    }
+    
     // calculates the error: E = (1 / 2) * (output - targetOutput)^2
     public Matrix getError() {
 
