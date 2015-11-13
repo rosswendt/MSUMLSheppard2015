@@ -71,12 +71,14 @@ public class MatrixOperations {
     }
     
     public static Matrix scalarMultiply(double scalar, Matrix a){
+        double[][] zeroMatrix = new double[a.getRows()][a.getColumns()];
+        Matrix resultMatrix = new Matrix(zeroMatrix);
         for(int i = 0; i < a.getRows(); i++){
             for(int j = 0; j < a.getColumns(); j++){
-                a.getArray()[i][j] = a.getArray()[i][j] * scalar;
+                resultMatrix.getArray()[i][j] = a.getArray()[i][j] * scalar;
             }
         }
-        return a;
+        return resultMatrix;
     }
     
     public static Matrix transpose(Matrix a){
