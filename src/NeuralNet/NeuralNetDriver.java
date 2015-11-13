@@ -9,10 +9,10 @@ import Math.MatrixOperations;
  * @author Ross Wendt
  */
 public class NeuralNetDriver {
-    
+
     double testSum = 0;
     double trainSum = 0;
-    
+
     boolean runWithOutput = true;
     MatrixNeuralNet neuralNet;
     //Driver D = new Driver();
@@ -20,48 +20,89 @@ public class NeuralNetDriver {
     public NeuralNetDriver(MatrixNeuralNet inNeuralNet) {
         neuralNet = inNeuralNet;
     }
-    
+
     public void runTest(boolean doOutput) {
-        if ( doOutput == true ) {
+        if (doOutput == true) {
             runWithOutput();
         } else {
             //NOT IMPLEMENTED runTestWithoutOutput();
         }
     }
-    
+
     public void runWithOutput() {
         for (int epoch = 0; epoch < neuralNet.getEpochLimit(); epoch++) {
-            System.out.println("Epoch" + epoch + ":");
-            Driver.meanSquaredErrorTraining = new Matrix(new double[1][Driver.outputLayer.length]);
-            Driver.meanSquaredErrorTesting = new Matrix(new double[1][Driver.outputLayer.length]);
+            System.out.println("EPOCH" + epoch + ":");
             for (int testCounter = 0; testCounter < Driver.k; testCounter++) {
-                int count = 0;
-                for (int trainingCounter = 0; trainingCounter < Driver.subsets.length; trainingCounter++) {
+                System.out.println("TRAIN:");
+                for (int trainingCounter = 0; trainingCounter < Driver.k; trainingCounter++) {
                     if (trainingCounter != testCounter) {
-                        for (int i = 0; i < Driver.subsets[trainingCounter].length; i++) {
-                            neuralNet.setInputMatrix(Driver.xDataSet[Driver.subsets[trainingCounter][i]]);
-                            //neuralNet.setTargetOutputMatrix(D.yDataSet[D.subsets[trainingCounter][i]]);
+                        for (int i = 0; i < Driver.xSubsets[trainingCounter].getSamples(); i++) {
+                            neuralNet.setInputMatrix(Driver.xSubsets[trainingCounter].getSubsetValues()[i]);
+                            neuralNet.setTargetOutputMatrix(Driver.ySubsets[trainingCounter].getSubsetValues()[i]);
                             neuralNet.forwardPropagation();
-                            Driver.meanSquaredErrorTraining = MatrixOperations.addMatrices(Driver.meanSquaredErrorTraining, neuralNet.getError());
                             neuralNet.getTrainingMethodInterface().applyMethod();
-                            //neuralNet.getTrainingMethodInterface().updateWeights(neuralNet);
                         }
                     }
                 }
-
-                for (int i = 0; i < Driver.subsets[testCounter].length; i++) {
-                    neuralNet.setInputMatrix(Driver.xDataSet[Driver.subsets[testCounter][i]]);
-                    //neuralNet.setTargetOutputMatrix(D.yDataSet[D.subsets[testCounter][i]]);
+                System.out.println("TEST:");
+                for (int i = 0; i < Driver.xSubsets[testCounter].getSamples(); i++) {
+                    neuralNet.setInputMatrix(Driver.xSubsets[testCounter].getSubsetValues()[i]);
+                    neuralNet.setTargetOutputMatrix(Driver.ySubsets[testCounter].getSubsetValues()[i]);
                     neuralNet.forwardPropagation();
-                    Driver.meanSquaredErrorTesting = MatrixOperations.addMatrices(Driver.meanSquaredErrorTesting, neuralNet.getError());
-                    neuralNet.getTrainingMethodInterface().applyMethod();
+                    System.out.println("Input:");
+                    for (int k = 0; k < neuralNet.getInputMatrix().getMatrixValues().length; k++) {
+                        for (int j = 0; j < neuralNet.getInputMatrix().getMatrixValues()[0].length; j++) {
+                            System.out.print(neuralNet.getInputMatrix().getMatrixValues()[k][j] + " ");
+                            if (neuralNet.getInputMatrix().getMatrixValues()[k][j] >= 10000) {
+                            } else if (neuralNet.getInputMatrix().getMatrixValues()[k][j] >= 1000) {
+                                System.out.print(" ");
+                            } else if (neuralNet.getInputMatrix().getMatrixValues()[k][j] >= 100) {
+                                System.out.print("  ");
+                            } else if (neuralNet.getInputMatrix().getMatrixValues()[k][j] >= 10) {
+                                System.out.print("   ");
+                            } else {
+                                System.out.print("    ");
+                            }
+                        }
+                        System.out.println();
+                    }
+                    System.out.println("Output:");
+                    for (int k = 0; k < neuralNet.getOutputMatrix().getMatrixValues().length; k++) {
+                        for (int j = 0; j < neuralNet.getOutputMatrix().getMatrixValues()[0].length; j++) {
+                            System.out.print(neuralNet.getOutputMatrix().getMatrixValues()[k][j] + " ");
+                            if (neuralNet.getOutputMatrix().getMatrixValues()[k][j] >= 10000) {
+                            } else if (neuralNet.getOutputMatrix().getMatrixValues()[k][j] >= 1000) {
+                                System.out.print(" ");
+                            } else if (neuralNet.getOutputMatrix().getMatrixValues()[k][j] >= 100) {
+                                System.out.print("  ");
+                            } else if (neuralNet.getOutputMatrix().getMatrixValues()[k][j] >= 10) {
+                                System.out.print("   ");
+                            } else {
+                                System.out.print("    ");
+                            }
+                        }
+                        System.out.println();
+                    }
+                    System.out.println("Target Output:");
+                    for (int k = 0; k < neuralNet.getTargetOutputMatrix().getMatrixValues().length; k++) {
+                        for (int j = 0; j < neuralNet.getTargetOutputMatrix().getMatrixValues()[0].length; j++) {
+                            System.out.print(neuralNet.getTargetOutputMatrix().getMatrixValues()[k][j] + " ");
+                            if (neuralNet.getTargetOutputMatrix().getMatrixValues()[k][j] >= 10000) {
+                            } else if (neuralNet.getTargetOutputMatrix().getMatrixValues()[k][j] >= 1000) {
+                                System.out.print(" ");
+                            } else if (neuralNet.getTargetOutputMatrix().getMatrixValues()[k][j] >= 100) {
+                                System.out.print("  ");
+                            } else if (neuralNet.getTargetOutputMatrix().getMatrixValues()[k][j] >= 10) {
+                                System.out.print("   ");
+                            } else {
+                                System.out.print("    ");
+                            }
+                        }
+                        System.out.println();
+                    }
+                    System.out.println();
                 }
             }
-            System.out.println("MeanSquaredError for training:" + ((Driver.meanSquaredErrorTraining.getMatrixValues()[0][0]) / (Driver.meansSquaredErrorDivisor * Driver.k)));
-            System.out.println("Root Mean Squared Error for training:" + Math.sqrt((Driver.meanSquaredErrorTraining.getMatrixValues()[0][0]) / (Driver.meansSquaredErrorDivisor * Driver.k)));
-            System.out.println("MeanSquaredError for testing:" + (Driver.meanSquaredErrorTesting.getMatrixValues()[0][0] / (Driver.subsets[0].length * Driver.k)));
-            System.out.println("Root Mean Squared Error for testing:" + Math.sqrt((Driver.meanSquaredErrorTesting.getMatrixValues()[0][0] / (Driver.subsets[0].length * Driver.k))));
-            System.out.println();
         }
     }
 }
