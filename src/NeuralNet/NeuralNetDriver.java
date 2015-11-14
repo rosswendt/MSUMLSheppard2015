@@ -30,6 +30,7 @@ public class NeuralNetDriver {
     }
 
     public void runWithOutput() {
+        neuralNet.getTrainingMethodInterface().initializeParents();
         for (int epoch = 0; epoch < neuralNet.getEpochLimit(); epoch++) {
             System.out.println("EPOCH" + epoch + ":");
             for (int testCounter = 0; testCounter < Driver.k; testCounter++) {
@@ -39,7 +40,6 @@ public class NeuralNetDriver {
                         for (int i = 0; i < Driver.xSubsets[trainingCounter].getSamples(); i++) {
                             neuralNet.setInputMatrix(Driver.xSubsets[trainingCounter].getSubsetValues()[i]);
                             neuralNet.setTargetOutputMatrix(Driver.ySubsets[trainingCounter].getSubsetValues()[i]);
-                            neuralNet.forwardPropagation();
                             neuralNet.getTrainingMethodInterface().applyMethod();
                         }
                     }
