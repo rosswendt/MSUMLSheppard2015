@@ -16,16 +16,16 @@ import NeuralNet.TrainingMethod.*;
  * driver to see how things work guys!!!!! !!!!!! It might not be 100% clear at
  * first but things can be changed !!!!!! very easily. :)
  *
- * TODO: Add in Angus's updates
+ * TODO: Add in Angus' updates
  */
 public class Driver {
-
     // Evolution strategy parameters:
     
     public static double initialSigma = (1.0 / 6.0);
-    public static int mu = 2;
-    public static int lambda = 4;
-
+    public static int mu = 8;
+    public static int lambda = 16;
+    
+    
     /* Evolutionary Computation tunable Params 
     
     
@@ -55,7 +55,7 @@ public class Driver {
      */
     public static double xValLowerBound = -5;
     public static double xValUpperBound = 10;
-    public static int dataSetSize = 10; // make sure this number is divisible by k
+    public static int dataSetSize = 1; // make sure this number is divisible by k
     public static int dimension = 2;
 
     /*
@@ -67,8 +67,8 @@ public class Driver {
     public static double upperBoundWeight = 1; //what does this do?
     public static double upperBoundBiasWeight = 1; //what does this do?
     public static double momentumParameter = 0.05;
-    public static int[] hiddenLayers = {10, 10}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
-    public static int epochLimit = 100;
+    public static int[] hiddenLayers = {2, 2}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
+    public static int epochLimit = 1000000;
 
 
     /*
@@ -80,7 +80,7 @@ public class Driver {
      here too.
      */
     static AbstractFunction activationFunction = new HyperbolicTangent();
-    static TrainingMethodInterface trainingMethod = new BackPropagation();
+    static TrainingMethodInterface trainingMethod = new EvolutionStrategy();
     static GenerateInputValsInterface input = new Regression(dataSetSize, dimension, xValLowerBound, xValUpperBound);
     static AbstractGenerateOutputVals output = new Rosenbrock();
 
@@ -89,7 +89,7 @@ public class Driver {
     
      k sets the number of folds for k-fold cross validation.
     */
-    public static int k = 5; // number of folds
+    public static int k = 1; // number of folds
 
 
     /*
@@ -220,7 +220,10 @@ public class Driver {
             System.out.println();
         }
         System.out.println();
-
+        
+//        trainingMethod.initializeParents();
+//        trainingMethod.applyMethod();
+//        trainingMethod.evaluateIndividuals();
         if (dataSetSize % k != 0) {
             System.out.println("!!!!ERROR: Dataset size is NOT divisble by k!!!!");
         } else {
