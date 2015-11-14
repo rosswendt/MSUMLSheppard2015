@@ -13,6 +13,7 @@ public class EvolutionStrategy implements TrainingMethodInterface {
     public int chromosomeDimension;
     public Random rdm = new Random();
     public int pRandomNumbers = 2;
+    public double parameterMutationDouble = 1.5;
 
     public Individual[] parents;
     public Individual[] children;
@@ -55,9 +56,9 @@ public class EvolutionStrategy implements TrainingMethodInterface {
             double parameterMutation;
             int coin = rdm.nextInt(2);
             if (coin == 0) {
-                parameterMutation = 3.0;
+                parameterMutation = parameterMutationDouble;
             } else {
-                parameterMutation = (1.0 / 3.0);
+                parameterMutation = (1.0 / parameterMutationDouble);
             }
             for (int j = 0; j < children[i].xArray.length; j++) {
                 //intermediate recombination
