@@ -3,6 +3,7 @@ package NeuralNet.TrainingMethod;
 import Driver.Driver;
 import Math.Matrix;
 import Math.MatrixOperations;
+import NeuralNet.MatrixNeuralNet;
 import NeuralNet.NeuralNetDriver;
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,6 +16,7 @@ public class DifferentialEvolution extends TrainingMethodInterface {
     ArrayList<Double> A = new ArrayList<>();
     int lengthWeights = Driver.hiddenLayers.length;
     int lengthMatrix = Driver.dataSetSize;    
+    //MatrixNeuralNet neuralNet = Driver.getNeuralNet();
     //int populationSize = Driver.populationSize;
     //ArrayList<double[]> Population = new ArrayList<>();
     //Matrix[] examples = new Matrix[Driver.populationSize];
@@ -30,9 +32,10 @@ public class DifferentialEvolution extends TrainingMethodInterface {
     //}
     
     @Override
-    public void applyMethod() {
+    public void applyMethod(double predictedOutput) {
         //System.out.println(neuralNet.weightMatrices[0].getColumns());
        //for (int t = 0; t < Driver.time; t++)
+            MatrixNeuralNet neuralNet = Driver.getNeuralNet();
             for (int i = 0; i < lengthWeights; i++) { // go through each weights layer
                 //System.out.println(i);
                 for (int k = 0; k < Driver.dimension; k++) { //there are |Driver.dataSetSize| individuals
@@ -115,6 +118,7 @@ public class DifferentialEvolution extends TrainingMethodInterface {
     
  
     double evaluate(Matrix candidate, int i, int k) {
+        MatrixNeuralNet neuralNet = Driver.getNeuralNet();
         //Matrix temp = new Matrix(neuralNet.weightMatrices[i].getArray()[k]);
         //double[] example = neuralNet.weightMatrices[i].getArray()[k];
         double potentialOutput = 0;
@@ -165,6 +169,7 @@ public class DifferentialEvolution extends TrainingMethodInterface {
     
     double[] createMutant(int in, int k) {
         //System.out.println(Driver.dataSetSize);
+        MatrixNeuralNet neuralNet = Driver.getNeuralNet();
         //neuralNet.weightMatrices[in] = MatrixOperations.transpose(neuralNet.weightMatrices[in]);
         int size = neuralNet.weightMatrices[0].getColumns();
         int rows = neuralNet.weightMatrices[0].getRows();

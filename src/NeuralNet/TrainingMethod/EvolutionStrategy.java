@@ -9,7 +9,7 @@ import NeuralNet.MatrixNeuralNet;
 public class EvolutionStrategy extends TrainingMethodInterface {
 
     @Override
-    public void applyMethod() {
+    public void applyMethod(double predictedOutput) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //NOT YET IMPLEMENTED !!! FOR USE IN PROJ 3

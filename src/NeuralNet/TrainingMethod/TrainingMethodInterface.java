@@ -10,11 +10,10 @@ import NeuralNet.MatrixNeuralNet;
  * @author Ross Wendt
  */
 public abstract class TrainingMethodInterface {
-    MatrixNeuralNet neuralNet = Driver.getNeuralNet();
     
+    public abstract void applyMethod(double predictedOutput);
     
-    public abstract void applyMethod();
-        public void updateWeights(MatrixNeuralNet neuralNet) {
+    public void updateWeights(MatrixNeuralNet neuralNet) {
         Matrix deltaWeightUpdate = MatrixOperations.addMatrices(neuralNet.deltaWeight(neuralNet.deltaZMatrices[0], neuralNet.input), neuralNet.lastWeightUpdates[0]);
         neuralNet.lastWeightUpdates[0] = deltaWeightUpdate;
         neuralNet.weightMatrices[0] = MatrixOperations.addMatrices(neuralNet.weightMatrices[0], deltaWeightUpdate);

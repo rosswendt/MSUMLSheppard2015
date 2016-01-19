@@ -14,10 +14,13 @@ public class NeuralNetDriver {
     
     double testSum = 0;
     double trainSum = 0;
+    int epochStep = 20;
+    double[] runningError = new double[epochStep];
     public static int epoch = 0;
     
+    
     boolean runWithOutput = true;
-    MatrixNeuralNet neuralNet;
+    MatrixNeuralNet neuralNet = Driver.getNeuralNet();
     //Driver D = new Driver();
 
     public NeuralNetDriver(MatrixNeuralNet inNeuralNet) {
@@ -43,17 +46,20 @@ public class NeuralNetDriver {
 
     private ArrayList<Matrix> partitionData() {
         int numFolds = Driver.k;
+        int foldSize = Driver.dataSetSize/numFolds;
         double[] d;
         ArrayList<Matrix> A = new ArrayList<>();
         
         for (int i = 0; i < numFolds; i++ ) {
-            double[][] dub = new double[Driver.dataSetSize][Driver.dimension];
+            double[][] dub = new double[foldSize][Driver.dimension];
             
             /*
             Initialize values
             */
             // src srcPos dest destPos length
-            System.arraycopy(Driver.xDataSet, i*Driver.k, dub, i*Driver.k, Driver.xDataSet.length/numFolds);
+            for (int j = 0; j < foldSize; j++ ) {
+                System.arraycopy(Driver.xDataSet, i*(foldSize)+j, dub, j, 1);
+            }
             
             //for (int j = 0; j < Driver.xDataSet.length; j++ ) {
             //   for (int k = 0; k < (Driver.xDataSet[0].length)/ numFolds; k++ ) {
@@ -70,66 +76,84 @@ public class NeuralNetDriver {
     }
 
     public void runNeuralNet() {
+        
         TrainingMethodInterface T = neuralNet.getTrainingMethodInterface();
+        double error = 0;
+        ArrayList<Matrix> train = partitionData();    
+        
         for (epoch = 0; epoch < Driver.epochLimit; epoch++) {
-            if (epoch % 20 == 0 ) {
+            if (epoch % epochStep == 0 ) {
                 System.out.println("Epoch " + epoch + ":");
             }
-            ArrayList<Matrix> train = partitionData();    
+
             //ArrayList<Matrix> test = new ArrayList<>();
-            ArrayList<Double> meanError = new ArrayList<>();
+
             for (int k = 0; k < Driver.k; k++ ) {
-                Matrix temp = train.get(k);
+                Matrix test = train.get(k);
                 
-                train.remove(temp);
-                //test.add(temp);
+                train.remove(test);
                 
                 for (int p = 0; p < train.size(); p++ ) {
                     for (int z = 0; z < train.get(p).getMatrixValues().length; z++ ) {
                         double targetOutVal = neuralNet.targetOutput.getMatrixValues()[0][z];
                         neuralNet.output.setMatrixValues(0, 0, targetOutVal);
-                        neuralNet.forwardPropagation(new Matrix (train.get(p).getMatrixValues()[z]));
-                        T.applyMethod(); 
-                        meanError.add(getError(temp, k, epoch));
+                        double[] helper = train.get(p).getMatrixValues()[z];
+                        Matrix M = new Matrix(helper);
+                        neuralNet.forwardPropagation(M);
+                        T.applyMethod(neuralNet.output.getArray()[0][0]); 
+
                     }
                 
-                        //train.add(temp);
-                        //test.remove(temp);
+                        //train.add(test);
+                        //test.remove(test);
                 }
+                assignError(neuralNet.getError());
+                error = neuralNet.getError();
                 
                 
                 //neuralNet.forwardPropagation(train);
                 //T.applyMethod(); //runs training algorithm
-                //meanError.add(getError(temp, k, epoch));
+                //meanError.add(getError(test, k, epoch));
                 
-                train.add(temp);
-                //test.remove(temp);
-            }
-            double meanSummedError = 0;
-            for (int i = 0; i < meanError.size(); i++ ) {
-                meanSummedError += meanError.get(i);
-            }
-            if (epoch % 20 == 0) {
-                meanSummedError = meanSummedError/Driver.k;
-                System.out.println("Mean error: " + meanSummedError);
-            }
-            
-            meanError.clear();
+                train.add(test);
+            }        
+            double tempVal = sumError();   
+            if (epoch % epochStep == 0)
+            //System.out.println(tempVal);
+                System.out.println(error);
         }
     }
 
     private double getError(Matrix test, int k, int epoch) {
-        //ArrayList<Matrix> holder = new ArrayList<>();
-        //holder.add(test);
-        //neuralNet.forwardPropagation(holder);
+        ArrayList<Matrix> holder = new ArrayList<>();
+        holder.add(test);
+        double sum = 0;
+        for (int i = 0; i < holder.size(); i++) {
+            neuralNet.forwardPropagation(holder.get(i));
+            sum += neuralNet.getError();
+        }
         
         
-        //System.out.println("Fold #" + k + "RMSE: " + neuralNet.getError());
+        //System.out.println("Fold #" + k + "Epoch #" + epoch + " RMSE: " + neuralNet.getError());
         
         
         
-        //holder.remove(test);
-        
-        return neuralNet.getError();
+        holder.remove(test);
+        //System.out.println(sum + " " + epoch);
+        return sum;
+    }
+    
+    private double sumError() {
+        double sum = 0;
+        for (int i = 0; i < epochStep; i++ ) {
+            sum += runningError[i];
+        }              
+        return sum;
+    }
+
+    private void assignError(double in) {
+        for (int i = 0; i < epochStep; i++) {
+            runningError[i] = in;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package NeuralNet.TrainingMethod;
 
+import Driver.Driver;
 import Math.Matrix;
 import Math.MatrixOperations;
 import NeuralNet.NetworkInterface;
@@ -10,41 +11,23 @@ import NeuralNet.MatrixNeuralNet;
  * @author Ross Wendt
  */
 public class BackPropagation extends TrainingMethodInterface {
-    
+
     @Override
-    public void applyMethod() {
+    public void applyMethod(double predictedOutput) {    
+        MatrixNeuralNet neuralNet = Driver.getNeuralNet();
+        //neuralNet.deltaZMatrices[0] = null;
+        //neuralNet.deltaZMatrices[1] = MatrixOperations.initializeZeroMatrix(neuralNet.zMatrices[0]);
+        //neuralNet.deltaZMatrices[2] = MatrixOperations.initializeZeroMatrix(neuralNet.zMatrices[0]);
+        double[] d = {predictedOutput};
+        Matrix targetOutput = new Matrix(d);
         
         
-        neuralNet.deltaZMatrices[neuralNet.deltaZMatrices.length - 1] = MatrixOperations.transpose(MatrixOperations.specialSubtractMatrices(neuralNet.output, neuralNet.targetOutput));
+        neuralNet.deltaZMatrices[neuralNet.deltaZMatrices.length - 1] = MatrixOperations.transpose(MatrixOperations.subtractMatrices(neuralNet.output, targetOutput));
         for (int i = neuralNet.deltaZMatrices.length - 2; i > -1; i--) {
             neuralNet.deltaZMatrices[i] = MatrixOperations.hadamardProduct(neuralNet.FMatrices[i], MatrixOperations.multiplyMatrixes(neuralNet.weightMatrices[i + 1], neuralNet.deltaZMatrices[i + 1]));
         }
         
         updateWeights(neuralNet);
         updateBiases(neuralNet);
-    }
-
-    public void updateWeights(MatrixNeuralNet neuralNet) {
-        Matrix deltaWeightUpdate = MatrixOperations.addMatrices(neuralNet.deltaWeight(neuralNet.deltaZMatrices[0], neuralNet.input), neuralNet.lastWeightUpdates[0]);
-        neuralNet.lastWeightUpdates[0] = deltaWeightUpdate;
-        neuralNet.weightMatrices[0] = MatrixOperations.addMatrices(neuralNet.weightMatrices[0], deltaWeightUpdate);
-        for (int i = 1; i < neuralNet.weightMatrices.length; i++) {
-            deltaWeightUpdate = MatrixOperations.addMatrices(neuralNet.deltaWeight(neuralNet.deltaZMatrices[i], neuralNet.zMatrices[i - 1]), neuralNet.lastWeightUpdates[i]);
-            neuralNet.lastWeightUpdates[i] = deltaWeightUpdate;
-            neuralNet.weightMatrices[i] = MatrixOperations.addMatrices(neuralNet.weightMatrices[i], deltaWeightUpdate);
-        }
-    }
-
-    public void updateBiases(MatrixNeuralNet neuralNet) {
-        Matrix deltaBiasUpdate;
-        for (int i = 0; i < neuralNet.biasMatrices.length; i++) {
-            deltaBiasUpdate = MatrixOperations.scalarMultiply(-1, MatrixOperations.scalarMultiply(neuralNet.eta,
-                    MatrixOperations.transpose(neuralNet.deltaZMatrices[i])));
-            deltaBiasUpdate = MatrixOperations.addBiasMatrices(deltaBiasUpdate, MatrixOperations.
-                    scalarMultiply(neuralNet.momentumParameter, neuralNet.lastBiasUpdates[i]));
-            neuralNet.lastBiasUpdates[i] = deltaBiasUpdate;
-            neuralNet.biasMatrices[i] = MatrixOperations.addBiasMatrices(deltaBiasUpdate, neuralNet.biasMatrices[i]);
-        }
-    }
-    
+    }    
 }

@@ -13,10 +13,10 @@ import java.util.Random;
  */
 public class GeneticAlgorithm extends TrainingMethodInterface {
     ArrayList<double[]> Population = new ArrayList<>();
-    
+    MatrixNeuralNet neuralNet = Driver.getNeuralNet();
     
     @Override
-    public void applyMethod() {
+    public void applyMethod(double predictedOutput) {
         initializePopulation();
         int popSize = Population.size();
         

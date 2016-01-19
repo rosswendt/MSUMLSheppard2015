@@ -185,6 +185,8 @@ public final class MatrixNeuralNet extends NetworkInterface {
         
         RMSE = RMSE / errorMatrix.getArray()[0].length;
 
+        //System.out.println(RMSE);
+        
         return RMSE;
     }
 

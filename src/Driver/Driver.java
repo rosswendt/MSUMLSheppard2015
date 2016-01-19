@@ -59,7 +59,7 @@ public class Driver {
     public static double xValLowerBound = -1.0;
     public static double xValUpperBound = 0;
     public static int dataSetSize = 50; // make sure this number is divisible by k
-    public static int dimension = 10; 
+    public static int dimension = 2; 
     
     
         /*
@@ -68,11 +68,11 @@ public class Driver {
     Tunable parameters for the Neural Net with backprop are as follows:
     */
 
-    public static double eta = .01;
+    public static double eta = .009;
     public static double upperBoundWeight = 10.0; //what does this do?
     public static double upperBoundBiasWeight = 1.0; //what does this do?
-    public static double momentumParameter = .9; 
-    public static int[] hiddenLayers = {200,10}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
+    public static double momentumParameter = .009; 
+    public static int[] hiddenLayers = {100}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
 
 
     /*
