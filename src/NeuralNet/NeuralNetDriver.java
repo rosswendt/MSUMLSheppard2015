@@ -82,7 +82,7 @@ public class NeuralNetDriver {
         ArrayList<Matrix> A = new ArrayList<>();
         
         for (int i = 0; i < numFolds; i++ ) {
-            double[][] dub = new double[Driver.dataSetSize][Driver.dimension];
+            double[][] dub = new double[Driver.dataSetSize/numFolds][Driver.dimension];
             
             /*
             Initialize values

@@ -54,10 +54,10 @@ public class Driver {
     Changes these values to affect the regression parameters;
     */
 
-    public static double xValLowerBound = -25;
-    public static double xValUpperBound = 0;
-    public static int dataSetSize = 200; // make sure this number is divisible by k
-    public static int dimension = 20; 
+    public static double xValLowerBound = 0;
+    public static double xValUpperBound = 100;
+    public static int dataSetSize = 10; // make sure this number is divisible by k
+    public static int dimension = 1; 
     
     
         /*
@@ -66,7 +66,7 @@ public class Driver {
     Tunable parameters for the Neural Net with backprop are as follows:
     */
 
-    public static double eta = .3;
+    public static double eta = .1;
     public static double upperBoundWeight = 1.0; //what does this do?
     public static double upperBoundBiasWeight = 1.0; //what does this do?
     public static double momentumParameter = .1; 
@@ -83,7 +83,7 @@ public class Driver {
     */
     
     static AbstractFunction activationFunction = new HyperbolicTangent();
-    static TrainingMethodInterface trainingMethod = new DifferentialEvolution();
+    static TrainingMethodInterface trainingMethod = new BackPropagation();
     static GenerateInputValsInterface input = new Regression(dataSetSize, dimension, xValLowerBound, xValUpperBound);
     static AbstractGenerateOutputVals output = new TestFunction();
 
