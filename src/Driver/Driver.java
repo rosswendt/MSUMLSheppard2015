@@ -57,7 +57,7 @@ public class Driver {
     public static double xValLowerBound = 0;
     public static double xValUpperBound = 100;
     public static int dataSetSize = 10; // make sure this number is divisible by k
-    public static int dimension = 1; 
+    public static int dimension = 2; 
     
     
         /*
@@ -70,7 +70,7 @@ public class Driver {
     public static double upperBoundWeight = 1.0; //what does this do?
     public static double upperBoundBiasWeight = 1.0; //what does this do?
     public static double momentumParameter = .1; 
-    public static int[] hiddenLayers = {100}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
+    public static int[] hiddenLayers = {10}; //if you go over 17 nodes in a hidden layer, hyperbolic tangent freaks out... why?!?!?!
 
 
     /*

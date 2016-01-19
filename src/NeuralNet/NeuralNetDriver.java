@@ -80,16 +80,18 @@ public class NeuralNetDriver {
         int numFolds = Driver.k;
         double[] d;
         ArrayList<Matrix> A = new ArrayList<>();
+        int dataLength = Driver.dataSetSize/numFolds;
+        int dataDim = Driver.dimension;
         
         for (int i = 0; i < numFolds; i++ ) {
-            double[][] dub = new double[Driver.dataSetSize/numFolds][Driver.dimension];
+            double[][] dub = new double[dataLength][dataDim];
             
             /*
             Initialize values
             */
             
-            for (int j = 0; j < Driver.xDataSet.length; j++ ) {
-                for (int k = 0; k < (Driver.xDataSet[0].length)/ numFolds; k++ ) {
+            for (int j = 0; j < dataLength; j++ ) {
+                for (int k = 0; k < dataDim; k++ ) {
                     dub[j][k] = Driver.xDataSet[j][k];
                 }
             }
